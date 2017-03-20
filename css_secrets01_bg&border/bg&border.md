@@ -52,7 +52,45 @@ background-clip  设置元素的背景（背景图片或颜色）是否延伸到
 
 ![enter description here][3]
 
+### 2. 多重边框
+> 背景知识：`box-shadow` 描述阴影效果
 
+#### 2.1 使用box-shadow来制作多重边框
+
+	 background: yellowgreen;
+	 box-shadow: 0 0 0 10px #655,
+				0 0 0 15px deeppink,
+				0 2px 5px 15px rgba(0, 0, 0, .6)
+				
+				
+* 第一个length参数设置水平偏移量，如果是负值则阴影位于元素左边；
+* 第二个设置垂直偏移量，如果是负值则阴影位于元素上面。
+* 第三个值越大，模糊面积越大，阴影就越大越淡。 不能为负值。
+* 第四个取正值时，阴影扩大；取负值时，阴影.收缩
+* 第五个参数为颜色
+* 还有一个参数用来设置阴影位置，默认在边框外，在最前面设置inset让阴影在边框内
+
+![enter description here][4]
+
+用border同样可以达到此效果，只不过更麻烦。用box-shadow通过逗号分隔可以创建任意数量的投影。
+
+#### 2.2 通过outline制作
+
+使用下面代码同样可以实现
+
+	background: yellowgreen;
+	border: 10px solid #655;
+	outline: 5px solid deeppink;
+	
+outline还可以有一个好处就是可以制作虚线边框，还可以通过outline-offset属性来控制它跟元素边缘之间的距离，接受负值。
+
+	background: black;
+	outline: 1px dashed white;
+	outline-offset: -10px;
+
+![enter description here][5]
+
+	
 
 
 
@@ -63,3 +101,5 @@ background-clip  设置元素的背景（背景图片或颜色）是否延伸到
   [1]: ./images/color.jpg "色轮"
   [2]: ./images/1.png "1.png"
   [3]: ./images/2.png "2.png"
+  [4]: ./images/02-1.png "02-1.png"
+  [5]: ./images/02-2.png "02-2.png"
