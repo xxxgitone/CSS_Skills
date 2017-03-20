@@ -90,7 +90,55 @@ outline还可以有一个好处就是可以制作虚线边框，还可以通过o
 
 ![enter description here][5]
 
+### 3. 灵活的背景定位
+以往针对容器某个角对背景图片做偏移定位的时候，一般是这样写
+
+``` css
+background-position:bottom right
+```
+或者使用百分比数值代替bottom和right，但是还有更好的方案
+
+#### 3.1 background-position的扩展语法方案
+允许我们指定背景图片距离任意角的偏移量，只要在偏移量前面指定关键字
+
+``` css
+background: url(http://csssecrets.io/images/code-pirate.svg)
+					no-repeat bottom right #58a;
+background-position: right 20px bottom 10px;
+```
+
+上面的代码表示背景图片跟右边缘保持20px,同时跟底部保持10px；background属性里面的设置用于回退。
+
+#### 3.2 background-origin方案
+
+此方案用于更好的解决背景图片偏移量和容器的内边距一样时的问题。
+
+* border-box
+	背景将会延伸到延伸到外边界的边框
 	
+* padding-box
+	背景描绘在padding盒子，边框里不会有背景出现。同样，背景将会延伸到最外边界的padding.
+	
+* content-box
+  背景描绘在内容区范围.
+
+将`background-origin`设置成`content-box`即可
+
+``` css
+padding: 10px;
+background: url(http://csssecrets.io/images/code-pirate.svg)
+                    no-repeat bottom right #58a;
+background-origin: content-box;
+```
+
+#### 3.3 calc()方案
+
+``` scss
+background-position: calc(100% - 20px) calc(100% - 10px)
+```
+
+
+
 
 
 
