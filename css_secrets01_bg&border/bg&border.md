@@ -109,6 +109,8 @@ background-position: right 20px bottom 10px;
 
 上面的代码表示背景图片跟右边缘保持20px,同时跟底部保持10px；background属性里面的设置用于回退。
 
+![enter description here][6]
+
 #### 3.2 background-origin方案
 
 此方案用于更好的解决背景图片偏移量和容器的内边距一样时的问题。
@@ -151,3 +153,4 @@ background-position: calc(100% - 20px) calc(100% - 10px)
   [3]: ./images/2.png "2.png"
   [4]: ./images/02-1.png "02-1.png"
   [5]: ./images/02-2.png "02-2.png"
+  [6]: ./images/03-1.png "03-1.png"
