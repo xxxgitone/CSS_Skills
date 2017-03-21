@@ -139,6 +139,58 @@ background-origin: content-box;
 background-position: calc(100% - 20px) calc(100% - 10px)
 ```
 
+### 4.边框内圆角
+
+这个效果按自己的思路都可以实现。我的第一反应也是使用两个元素实现。
+
+``` html
+<div class="something-meaningful">
+      <div>I have a nice subtle inner rounding, don’t I look pretty?</div>
+ </div>
+```
+```css
+.something-meaningful {
+	background: #655;
+	padding: .8em;
+}
+
+.something-meaningful > div {
+	background: tan;
+	border-radius: .8em;
+	padding: 1em;
+}
+```
+
+![enter description here][7]
+
+当然这本书上肯定要讲述比较独特的方法实现。利用outline和box-shadow属性，只需写一个html属性即可
+
+``` css
+outline: .6em solid #655;
+box-shadow: 0 0 0 .4em #655;
+border-radius: .8em;
+padding: 1em;
+background: tan;
+```
+
+![enter description here][8]
+
+分析其原理：
+*	outline描边并不会跟着圆角走，当只是用outline的时候，圆角跟直角处有空隙
+
+![enter description here][9]
+
+* box-shadow会跟着圆角走，当只是用box-shadow的时候没有直角
+
+
+![enter description here][10]
+
+于是正好可以使用box-shadow来填充那部分空隙
+
+
+
+
+
 
 
 
@@ -154,3 +206,7 @@ background-position: calc(100% - 20px) calc(100% - 10px)
   [4]: ./images/02-1.png "02-1.png"
   [5]: ./images/02-2.png "02-2.png"
   [6]: ./images/03-1.png "03-1.png"
+  [7]: ./images/04-1.png "04-1.png"
+  [8]: ./images/04-2.png "04-2.png"
+  [9]: ./images/04-3.png "04-3.png"
+  [10]: ./images/04-4.png "04-4.png"
