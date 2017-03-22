@@ -209,11 +209,19 @@ background: linear-gradient(#fb3, #58a);
 
 添加数值，指定被填充的区域
 
+```css
+background: linear-gradient(#fb3 20%, #58a 80%);
+```
+
 ![enter description here][12]
 
 可以看到渐变的区域变小了
 
 把区域设为50%
+
+```css
+background: linear-gradient(#fb3 50%, #58a 50%)
+```
 
 ![enter description here][13]
 
@@ -388,9 +396,14 @@ background-size: 30px 30px;
   [14]: ./images/05-4.png "05-4.png"
   [15]: ./images/05-5.png "05-5.png"
   [16]: ./images/05-6.png "05-6.png"
+<<<<<<< HEAD
   [17]: ./images/05-7.png "05-7.png"
   [18]: ./images/05-8.png "05-8.png"
   [19]: ./images/05-9.png "05-9.png"
   [20]: ./images/05-10.png "05-10.png"
   [21]: ./images/06-1.png "06-1.png"
   [22]: ./images/06-2.png "06-2.png"
+=======
+  [17]: ./images/05-9.png "05-9.png"
+  [18]: ./images/05-10.png "05-10.png"
+>>>>>>> 8429b85b024b237e2316c86e89392d64f33c5acb
