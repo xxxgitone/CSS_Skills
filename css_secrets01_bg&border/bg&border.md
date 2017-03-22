@@ -209,11 +209,19 @@ background: linear-gradient(#fb3, #58a);
 
 添加数值，指定被填充的区域
 
+```css
+background: linear-gradient(#fb3 20%, #58a 80%);
+```
+
 ![enter description here][12]
 
 可以看到渐变的区域变小了
 
 把区域设为50%
+
+```css
+background: linear-gradient(#fb3 50%, #58a 50%)
+```
 
 ![enter description here][13]
 
