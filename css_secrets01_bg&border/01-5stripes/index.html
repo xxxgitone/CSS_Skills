@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+      div {
+        margin: 50px auto;
+        height: 300px;
+        width: 500px;
+        border: 1px solid #eee;
+
+        /*基本线性渐变*/
+        /*background: linear-gradient(#fb3, #58a);*/
+
+        /*指定区域*/
+        /*background: linear-gradient(#fb3 20%, #58a 80%);*/
+
+        /*background: linear-gradient(#fb3 50%, #58a 50%);*/
+
+        /*等宽条纹*/
+        /*background: linear-gradient(#fb3 50%, #58a 50%);
+        background-size: 100% 30px;*/
+
+        /*background: linear-gradient(#fb3 30%, #58a 30%);
+        background-size: 100% 30px;*/
+        
+        /*background: linear-gradient(#fb3 30%, #58a 0);
+        background-size: 100% 30px;*/
+
+        /*多种颜色*/
+        /*background: linear-gradient(#fb3 33.3%, #58a 0, #58a 66.6%, yellowgreen 0);
+        background-size: 45px;*/
+
+        /*垂直条纹*/
+        /*background: linear-gradient(to right, #fb3 50%, #58a 0);
+        background-size: 30px 100%;*/
+
+        /*斜向条纹*/
+        /*background: repeating-linear-gradient(45deg, #fb3, #58a 30px);*/
+
+        /*background: repeating-linear-gradient(60deg, #fb3, #fb3 15px, #58a 0, #58a 30px);*/
+
+        /*灵活的同色系条纹*/
+        /*background: repeating-linear-gradient(30deg, #79b, #79b 15px, #58a 0, #58a 30px);*/
+
+        background: #58a;
+        background-image: repeating-linear-gradient(30deg,
+                          hsla(0,0%,100%,.1),
+                          hsla(0,0%,100%,.1),15px,
+                          transparent 0, transparent 30px);
+      }
+    </style>
+</head>
+<body>
+  <div>
+  </div>
+</body>
+</html>

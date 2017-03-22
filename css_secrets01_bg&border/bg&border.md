@@ -1,4 +1,5 @@
 ## 背景与边框
+[TOC]
 ### 1.半透明边框
 >  背景知识：`rgba/hsla`，在`rgb/hsl`的基础长增加了Alpha通道,用于设置颜色的不透明度（就是能透过多少背景）
 *	`rgba`接受四个数值，即`rgba(red, green, blue,a)`,`rgb`可以为数值（0 ~ 255），也可以为百分比（0 ~ 100%），a表示不透明度(0~1),1为完全不透明，0表示完全透明。
@@ -187,6 +188,138 @@ background: tan;
 
 于是正好可以使用box-shadow来填充那部分空隙
 
+### 5. 条纹图案
+> 背景知识: 线性渐变`linear-gradient`、`background-size`
+* `background-size` 设置背景图片大小，有多种写法
+	* 使用关键字：`background-size： cover`，表示缩放背景图片以完全覆盖背景区，可能背景图片部分看不见。还有`background-size: contain`，缩放背景图片以完全装入背景区，可能背景区部分空白。
+	* 使用一个值：`background-size: 3em`；这个值指定图片的宽度，图片的高度隐式的为auto，还可以使用百分比。
+	* 两个值：`background-size: 3em 25%`，第一个值指定图片的宽度，第二个值指定图片的高度。可为数值，可为百分比。
+	* 逗号分隔的多个值：设置多重背景
+
+#### 5.1垂直条纹
+
+尝试一个基本线性渐变
+
+``` css
+background: linear-gradient(#fb3, #58a);
+```
+最终效果是从上到下，第一个颜色渐变到第二个颜色
+
+![enter description here][11]
+
+添加数值，指定被填充的区域
+
+![enter description here][12]
+
+可以看到渐变的区域变小了
+
+把区域设为50%
+
+![enter description here][13]
+
+发现已经看不到渐变区域了，如果多个色标具有相同的位置，它们会产生一个无限小的过渡区域，过度的起止变化分别是第一个和最后一个指定值，从效果上看，颜色会在那突然变化，而不是一个平滑的过度。
+
+那么知道这个就可以配合`background-size`了
+
+``` css
+ background: linear-gradient(#fb3 50%, #58a 50%);
+ background-size: 100% 30px;
+```
+
+![enter description here][14]
+
+我们把两条条纹的高度设置成15px，由于背景默认是平铺的，整个容器也被填满了。
+
+还可以创建不等宽的条纹
+
+``` css
+background: linear-gradient(#fb3 30%, #58a 30%);
+background-size: 100% 30px;
+```
+
+![enter description here][15]
+
+如果某个色标的位置值比整个列表中在它之前的色标的位置的值都要小，则该色标的位置值会被设置为它前面所有色标位置的最大值。所以利用这个特性，可以不用每次都修改两个数
+
+``` css
+background: linear-gradient(#fb3 30%, #58a 0);
+background-size: 100% 30px;
+```
+
+创建超过两种颜色的条纹
+
+![enter description here][16]
+
+``` css
+ background: linear-gradient(#fb3 33.3%, #58a 0, #58a 66.6%, yellowgreen 0);
+ background-size: 45px;
+```
+
+#### 5.2垂直条纹
+原理一样，稍微调整即可
+
+``` css
+background: linear-gradient(to right, #fb3 50%, #58a 0);
+background-size: 30px 100%;
+```
+
+通过 `to right` 改变渐变的起始位置，也可以写成角度，这里可以写`90deg`。
+另外`background-size`的数值也要调换
+
+#### 5.3 斜向条纹
+
+使用`repeating-linear-gradient`快速构建
+
+``` css
+background: repeating-linear-gradient(45deg, #fb3, #58a 30px);
+```
+
+可以很方便的变换想要的图形
+
+![enter description here][17]
+
+#### 5.4 灵活的同色系条纹
+很多情况下，我们想要的条纹图案是由同一系色组成，只是在明暗方面有些差异。
+
+``` css
+background: repeating-linear-gradient(30deg, #79b, #79b 15px, #58a 0, #58a 30px);
+```
+
+![enter description here][18]
+
+但是上面写法想要修改的时候需要修改四处颜色，改进的办法
+
+``` css
+background: #58a;
+background-image: repeating-linear-gradient(30deg,
+				  hsla(0,0%,100%,.1),
+				  hsla(0,0%,100%,.1),15px,
+				  transparent 0, transparent 30px);
+```
+
+这里把最深的颜色作为背景色，同时把半透明白色的条纹叠加在背景之上来得到浅色条纹。这样每次只要修改背景色就可以了。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+
+
+
+
+
 
 
 
@@ -210,3 +343,11 @@ background: tan;
   [8]: ./images/04-2.png "04-2.png"
   [9]: ./images/04-3.png "04-3.png"
   [10]: ./images/04-4.png "04-4.png"
+  [11]: ./images/05-1.png "05-1.png"
+  [12]: ./images/05-2.png "05-2.png"
+  [13]: ./images/05-3.png "05-3.png"
+  [14]: ./images/04-5.png "05-4.png"
+  [15]: ./images/04-6.png "05-5.png"
+  [16]: ./images/05-6.png "05-6.png"
+  [17]: ./images/05-9.png "05-9.png"
+  [18]: ./images/05-10.png "05-10.png"
