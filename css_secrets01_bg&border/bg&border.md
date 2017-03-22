@@ -263,6 +263,8 @@ background: linear-gradient(to right, #fb3 50%, #58a 0);
 background-size: 30px 100%;
 ```
 
+![enter description here][17]
+
 通过 `to right` 改变渐变的起始位置，也可以写成角度，这里可以写`90deg`。
 另外`background-size`的数值也要调换
 
@@ -273,10 +275,16 @@ background-size: 30px 100%;
 ``` css
 background: repeating-linear-gradient(45deg, #fb3, #58a 30px);
 ```
+![enter description here][18]
 
 可以很方便的变换想要的图形
 
-![enter description here][17]
+``` css
+background: repeating-linear-gradient(60deg, #fb3, #fb3 15px, #58a 0, #58a 30px);
+```
+
+
+![enter description here][19]
 
 #### 5.4 灵活的同色系条纹
 很多情况下，我们想要的条纹图案是由同一系色组成，只是在明暗方面有些差异。
@@ -285,19 +293,50 @@ background: repeating-linear-gradient(45deg, #fb3, #58a 30px);
 background: repeating-linear-gradient(30deg, #79b, #79b 15px, #58a 0, #58a 30px);
 ```
 
-![enter description here][18]
+![enter description here][20]
 
 但是上面写法想要修改的时候需要修改四处颜色，改进的办法
 
 ``` css
 background: #58a;
 background-image: repeating-linear-gradient(30deg,
-				  hsla(0,0%,100%,.1),
-				  hsla(0,0%,100%,.1),15px,
-				  transparent 0, transparent 30px);
+	  hsla(0,0%,100%,.1),
+	  hsla(0,0%,100%,.1),15px,
+	  transparent 0, transparent 30px);
 ```
 
 这里把最深的颜色作为背景色，同时把半透明白色的条纹叠加在背景之上来得到浅色条纹。这样每次只要修改背景色就可以了。
+
+### 6.复杂的背景图案
+> 背景知识：css渐, "条纹背景"
+
+#### 6.1 网格
+把多个渐变图案组合起来，让它们透过彼此的透明区域显现时，就会得到意想不到的图案。
+
+``` css
+background: white;
+background-image: linear-gradient(90deg, rgba(200,0,0,.5), 50%, transparent 0),
+                linear-gradient(rgba(200,0,0,.5) 50%, transparent 0);
+ background-size: 30px 30px;
+```
+
+![enter description here][21]
+
+有些时候我们希望网格中每个格子的大小可以调整，而网格线条的粗细同时保持固定。下面展示了使用长度而不是百分比作为色标的场景
+
+``` css
+ background: #58a;
+background-image: linear-gradient(white 1px, transparent 0),
+		  linear-gradient(90deg, white 1px, transparent 0);
+background-size: 30px 30px;
+```
+
+![enter description here][22]
+
+
+
+
+
 
 
 
@@ -346,8 +385,12 @@ background-image: repeating-linear-gradient(30deg,
   [11]: ./images/05-1.png "05-1.png"
   [12]: ./images/05-2.png "05-2.png"
   [13]: ./images/05-3.png "05-3.png"
-  [14]: ./images/04-5.png "05-4.png"
-  [15]: ./images/04-6.png "05-5.png"
+  [14]: ./images/05-4.png "05-4.png"
+  [15]: ./images/05-5.png "05-5.png"
   [16]: ./images/05-6.png "05-6.png"
-  [17]: ./images/05-9.png "05-9.png"
-  [18]: ./images/05-10.png "05-10.png"
+  [17]: ./images/05-7.png "05-7.png"
+  [18]: ./images/05-8.png "05-8.png"
+  [19]: ./images/05-9.png "05-9.png"
+  [20]: ./images/05-10.png "05-10.png"
+  [21]: ./images/06-1.png "06-1.png"
+  [22]: ./images/06-2.png "06-2.png"
