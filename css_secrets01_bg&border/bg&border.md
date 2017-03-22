@@ -316,7 +316,7 @@ background-image: repeating-linear-gradient(30deg,
 这里把最深的颜色作为背景色，同时把半透明白色的条纹叠加在背景之上来得到浅色条纹。这样每次只要修改背景色就可以了。
 
 ### 6.复杂的背景图案
-> 背景知识：css渐, "条纹背景"
+> 背景知识：css渐变, "条纹背景"
 
 #### 6.1 网格
 把多个渐变图案组合起来，让它们透过彼此的透明区域显现时，就会得到意想不到的图案。
@@ -396,14 +396,11 @@ background-size: 30px 30px;
   [14]: ./images/05-4.png "05-4.png"
   [15]: ./images/05-5.png "05-5.png"
   [16]: ./images/05-6.png "05-6.png"
-<<<<<<< HEAD
-  [17]: ./images/05-7.png "05-7.png"
-  [18]: ./images/05-8.png "05-8.png"
+  [17]: ./images/05-9.png "05-9.png"
+  [18]: ./images/05-10.png "05-10.png"
   [19]: ./images/05-9.png "05-9.png"
   [20]: ./images/05-10.png "05-10.png"
   [21]: ./images/06-1.png "06-1.png"
   [22]: ./images/06-2.png "06-2.png"
-=======
-  [17]: ./images/05-9.png "05-9.png"
-  [18]: ./images/05-10.png "05-10.png"
->>>>>>> 8429b85b024b237e2316c86e89392d64f33c5acb
+  
+
