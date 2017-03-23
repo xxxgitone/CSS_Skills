@@ -341,6 +341,169 @@ background-size: 30px 30px;
 
 ![enter description here][22]
 
+还可以把两幅不同线宽、不同颜色的网格图案叠加起来
+
+``` css
+background: #58a;
+background-image: linear-gradient(white 2px, transparent 0),
+	linear-gradient(90deg, white 2px, transparent 0),
+	linear-gradient(hsla(0,0%,100%,.3) 1px, transparent 0),
+	linear-gradient(90deg,hsla(0,0%,100%,.3) 1px, transparent 0);
+background-size: 75px 75px, 75px 75px,15px 15px, 15px 15px;
+```
+![enter description here][23]
+
+#### 6.2 波点
+波点是利用径向渐变知识。下面是一个简单的径向渐变
+
+``` css
+background: #655;
+background-image: radial-gradient(tan 30%, transparent 0);
+background-size: 30px 30px;
+```
+
+![enter description here][24]
+
+这里的径向渐变由每个小方块的中心向四周渐变，也就是`background-size`指定的大小。
+
+下面是一种更加使用的图案：
+
+``` css
+background: #655;
+background-image: radial-gradient(tan 30%, transparent 0),
+	radial-gradient(tan 30%, transparent 0);
+background-size: 30px 30px;
+background-position: 0 0, 15px 15px;
+```
+使用`background-position`属性将两个背景位置错开，第一个值表示水平位置，第二个表示垂直位置，用逗号分隔设置多重。
+
+![enter description here][25]
+
+因为为了达到效果，第二层背景的偏移定位值必须是平铺图案中的每个基本单元宽高的一半，每次修改要修改多处尺寸，可以使用`scss`
+
+``` scss
+@mixin polka($size, $dot, $base, $accent) {
+	  background: $base;
+	  background-image: radial-gradient($accent $dot, transparent 0),
+		  radial-gradient($accent $dot, transparent 0);
+	  background-size: $size $size;
+	  background-position: 0 0, $size/2 $size/2;
+	}
+```
+```scss
+@include polka(30px, 30%, #655, tan)
+```
+
+#### 6.3 棋盘
+一步一步制作棋盘，首先回想一下制作三角形图案。要制作类似下面这张图案
+
+![enter description here][26]
+
+``` css
+background: #eee;
+background-image: linear-gradient(45deg, #bbb 50%, transparent 0);
+background-size: 30px 30px;
+```
+![enter description here][27]
+
+每个三角形占据每个单元的一般，修改色标位置为25%。
+
+![enter description here][28]
+
+我们把色标的顺序反转，便可以创建相反方向的三角形了
+
+``` css
+background: #eee;
+background-image: linear-gradient(45deg, transparent 75%, #bbb 0);
+background-size: 30px 30px;
+```
+![enter description here][29]
+
+组合起来的图形
+
+``` css
+background: #eee;
+background-image: linear-gradient(45deg, transparent 75%, #bbb 0),
+	  linear-gradient(45deg, #bbb 25%, transparent 0);
+background-size: 30px 30px;
+```
+
+![enter description here][30]
+
+现在只需要把第二层渐变在水平和垂直方向均移动每个单元的一半，就可以拼接起来。
+
+``` css
+background: #eee;
+background-image: linear-gradient(45deg, #bbb 25%, transparent 0),
+		 linear-gradient(45deg, transparent 75%, #bbb 0);
+background-size: 30px 30px;
+background-position: 0 0, 15px 15px;
+```
+![enter description here][31]
+
+产生出了一个正方形，本质上是棋盘的一半，复制一份再创建出另一组正方形。
+
+``` css
+background: #eee;
+background-image: linear-gradient(45deg, #bbb 25%, transparent 0),
+		 linear-gradient(45deg, transparent 75%, #bbb 0),
+		 linear-gradient(45deg, #bbb 25%, transparent 0),
+		 linear-gradient(45deg, transparent 75%, #bbb 0);
+background-size: 30px 30px;
+background-position: 0 0, 15px 15px,15px 15px, 30px 30px;
+```
+
+![enter description here][32]
+
+代码进行优化，可以把这些处在单元顶角的三角形两两组合起来（即把第一组和第二组并为一层渐变，第三组和第四组为一层渐变）
+
+``` css
+background: #eee;
+background-image: linear-gradient(45deg, rgba(0,0,0,.25) 25%, transparent 0,
+		 transparent 75%, rgba(0,0,0,.25) 0),
+		 linear-gradient(45deg, rgba(0,0,0,.25) 25%, transparent 0,
+		 transparent 75%, rgba(0,0,0,.25) 0);
+background-position: 0 0, 15px 15px;
+background-size: 30px 30px;
+```
+
+使用scss
+
+``` scss
+@mixin checkerboard($size, $base, $accent: rgba(0,0,0,.25)) {
+	  background: $base;
+	  background-image: linear-gradient(45deg, $accent 25%, transparent 0,
+				transparent 75%, $accent 0),
+				linear-gradient(45deg, $accent 25%, transparent 0,
+				transparent 75%, $accent 0);
+	  background-position: 0 0, $size $size;
+	  background-size: $size*2 $size*2;
+	}
+```
+```scss
+@include checkerboard(15px, #58a, tan);
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -380,6 +543,9 @@ background-size: 30px 30px;
 	
 
 
+  
+
+
   [1]: ./images/color.jpg "色轮"
   [2]: ./images/1.png "1.png"
   [3]: ./images/2.png "2.png"
@@ -402,5 +568,13 @@ background-size: 30px 30px;
   [20]: ./images/05-10.png "05-10.png"
   [21]: ./images/06-1.png "06-1.png"
   [22]: ./images/06-2.png "06-2.png"
-  
-
+  [23]: ./images/06-3.png "06-3.png"
+  [24]: ./images/06-4.png "06-4.png"
+  [25]: ./images/06-5.png "06-5.png"
+  [26]: ./images/06-11.png "棋盘"
+  [27]: ./images/06-6.png "06-6.png"
+  [28]: ./images/06-7.png "06-7.png"
+  [29]: ./images/06-8.png "06-8.png"
+  [30]: ./images/06-9.png "06-9.png"
+  [31]: ./images/06-10.png "06-10.png"
+  [32]: ./images/06-11.png "06-11.png"
