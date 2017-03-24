@@ -8,7 +8,7 @@
 	`rgba(100%,0,0，0.5)`表示纯红色，半透明
 	
 *  hsla(色相， 饱和度%， 亮度%，透明度)，格式为hsla(0, 0%,0%,0)
-	hsla的第一个值表示色相，也就是一个实际的颜色，比如红色或者绿色。搜友的颜色绕色相环（色轮）一周，色相值以圆周上的度数表示。
+	hsla的第一个值表示色相，也就是一个实际的颜色，比如红色或者绿色。所有的颜色绕色相环（色轮）一周，色相值以圆周上的度数表示。
 	
 	![enter description here][1]
 	
@@ -484,6 +484,59 @@ background-size: 30px 30px;
 @include checkerboard(15px, #58a, tan);
 ```
 
+### 7. 伪随机背景
+重复平铺的几何图案很美观，但是看起来和你呆板。用css实现图案的随机平铺。
+
+``` css
+background: linear-gradient(90deg, #fb3 15%, #655 0, #655 40%, 
+            #ab4 0, #ab4 65%, hsl(20, 40%, 90%) 0);
+background-size: 80px 100%;
+```
+![enter description here][33]
+
+上面通过`background-size`来控制图案每隔80px重复一次。规律比较明显，并不是真实的随机平铺。
+
+接下来，把这组条纹从一个平面拆散为多个层面：一种颜色作为底色，另外三种颜色作为条纹，然后再让条纹以不同的间隔进行重复平铺。在色标中定好边框的宽度，用`background-siz`e来控制条纹的间距
+
+``` css
+background: hsl(20, 40%, 90%);
+background-image:
+	linear-gradient(90deg, #fb3 10px, transparent 0),
+	linear-gradient(90deg, #ab4 20px, transparent 0),
+	linear-gradient(90deg, #655 20px, transparent 0);
+background-size: 80px 100%, 60px 100%, 40px 100%;
+```
+
+![enter description here][34]
+
+但是这里还有一个问题，每隔240px还是会重复一次，红色箭头处。这里每次重复单元正好是`background-size`的最小公倍数，而40、60、80的最小公倍数就是240。
+
+根据这个逻辑，可以把每个重复单元的尺寸最大化，也就是最小公倍数最大化。为了让最小公倍数最大化，这些数字最好是相对质数（比如，10和27不是质数，但他们是相对质数，最小公倍数为10乘以27）。要达成相对质数，尽量选择质数，于是下面代码
+
+``` css
+background: hsl(20, 40%, 90%);
+background-image:
+	linear-gradient(90deg, #fb3 11px, transparent 0),
+	linear-gradient(90deg, #ab4 23px, transparent 0),
+	linear-gradient(90deg, #655 41px, transparent 0);
+background-size: 41px 100%, 61px 100%, 83px 100%;
+```
+![enter description here][35]
+
+再想让它重复，早就超出屏幕的分辨率了。
+
+这个技巧被Alex Walker定名为“蝉原则”，通过质数来增加随机真实性。还可以用于其他涉及有规律重复的情况
+
+* 在图片库中，为每幅图片用细微的伪随机旋转效果时，可以使用`:neth-child(a)`选择符，且让`a`是质数。
+* 如果要生成一个动画，而且让它看起来不是按照明显的规律在循环时，可以应用多个时长为质数的动画。
+
+
+
+
+
+
+
+
 
 
 
@@ -578,3 +631,6 @@ background-size: 30px 30px;
   [30]: ./images/06-9.png "06-9.png"
   [31]: ./images/06-10.png "06-10.png"
   [32]: ./images/06-11.png "06-11.png"
+  [33]: ./images/07-1.png "07-1.png"
+  [34]: ./images/07-2.png "07-2.png"
+  [35]: ./images/07-3.png "07-3.png"
