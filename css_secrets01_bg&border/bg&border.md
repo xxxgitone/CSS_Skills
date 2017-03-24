@@ -531,6 +531,168 @@ background-size: 41px 100%, 61px 100%, 83px 100%;
 * 如果要生成一个动画，而且让它看起来不是按照明显的规律在循环时，可以应用多个时长为质数的动画。
 
 
+### 8. 连续的图像边框
+> 背景知识：css渐变、border-image、条纹背景、基本的css动画
+* `border-image`：指定作为元素周围边框的图像。基本原理就是九宫格伸缩法，把图片切割成九块，然后把它们应用到边框相应的边和角。结合实例继续说明
+
+
+有时候我们想把一幅图案或图片应用为边框，而不是背景。一个元素有一圈装饰性的边框，基本上就是一张图片被裁剪进了边框所在的方环区域，不仅如此，还希望这个元素的尺寸在扩大或缩小的时候，这幅图片都可以自动延伸并覆盖完整的边框区域。
+
+最简单的办法就是使用连个HTML元素,一个元素用来把图片设为背景，另一个元素存放内容
+
+``` html
+<div class="something">
+	<div>I have a nice stone art border,
+		don't I look pertty?
+	</div>
+</div>
+```
+
+```css
+.something {
+        background: url('http://csssecrets.io/images/stone-art.jpg');
+        background-size: cover;
+        padding: 1em;
+  }
+
+  .something > div {
+
+	background: white;
+	padding: 1em;
+  }
+  ```
+  
+  ![enter description here][36]
+  
+  
+  如何改进，使用一个元素？
+  思路：在背景图片之上，再叠加一层纯白的实色背景，为了让下层的图片背景透过边框区域显现出来，需要给两层背景指定不同的`background-clip`值，最后一个要点在于，我们只能在多重背景的最底层设置背景色，因此需要一道从白色过渡到白色的css渐变来模拟纯白实色背景的效果
+  
+
+``` css
+padding: 1em;
+border: 1em solid  transparent;
+background: linear-gradient(white, white),
+	   url('http://csssecrets.io/images/stone-art.jpg');
+background-size: cover;
+background-clip: padding-box, border-box;
+```
+
+![enter description here][37]
+
+发现效果很接近，但是边框的图片有一种怪异的拼接效果。原因是`background-origin`的默认值是`paddin-box`，因此，图片的显示尺寸不仅取决于padding box的尺寸，而且被放置在了padding box的原点（左上角）。我们看到的实际上就是背景图片以平铺的方式蔓延到border box区域的效果。修改即可 
+
+``` css
+padding: 1em;
+border: 1em solid  transparent;
+background: linear-gradient(white, white),
+	   url('http://csssecrets.io/images/stone-art.jpg');
+background-size: cover;
+background-clip: padding-box, border-box;
+background-origin:border-box;
+```
+
+简写属性
+```css
+background: 
+            linear-gradient(white, white) padding-box,
+            url('http://csssecrets.io/images/stone-art.jpg') border-box 0 / cover;
+```
+
+![enter description here][38]
+
+这个技巧还可以运用到渐图案上，比如制作一个老式信封
+
+``` css
+padding: 1em;
+border: 1em solid transparent;
+background: linear-gradient(white,white) padding-box,
+	repeating-linear-gradient(-45deg, red 0, red 12.5%, transparent 0,
+	  transparent 25%, #58a 0, #58a 37.5%, transparent 0, transparent 50%) 0 / 5em 5em;
+```
+![enter description here][39]
+
+上面例子可以很容易的通过`background-size`属性来改变条纹的宽度，通过border属性来改变整个边框的厚度。还可以用`border-image`来实现。
+
+``` css
+padding: 1em;
+border: 16px solid transparent;
+border-image: 16 repeating-linear-gradient(-45deg, red 0, red 1em, transparent 0,
+	  transparent 2em, #58a 0, #58a 3em, transparent 0, transparent 4em);
+```
+
+`border-image`也是一个复合属性，包含下面属性
+
+* `border-image-source`：用在边框的图片的路径
+* `border-image-slice`：图片边框向内偏移
+* `border-image-width`：图片边框的宽度
+* `border-image-outset`：边框图像区域超出边框的量
+* `border-image-repeat`：图像边框是否应平铺(repeated)、铺满(rounded)或拉伸(stretched)
+
+上面例子使用border-image实现，存在一些问题
+
+* 每当我们改变`border-image-slice`时，都要同时修改`border-width`来让它们匹配
+* 由于不能在`border-image-slice`属性中使用em单位，只能把边框厚度指定为像素单位
+* 条纹的宽度需要在色标的位置信息中写好。
+
+
+制作蚂蚁行军边框
+
+将边框的宽度减少至1px，修改条纹颜色，便可以出现虚线边框，然后`background-size`改为某个合适的值。添加动画
+
+``` css
+@keyframes ants { to {background-position: 100%} }
+```
+
+```css
+padding: 1em;
+border: 1px solid transparent;
+background: 
+	linear-gradient(white, white) padding-box,
+	repeating-linear-gradient(-45deg, black 0, black 25%, white 0, white 50%) 0 /.6em .6em;
+animation: ants 12s linear infinite;
+```
+![enter description here][40]
+
+`border-image`也有它强大之处，尤其是在搭配渐变图案时。比如我们需要一个顶部边框被裁切的效果，就像一般的脚注一样。我们所需要的就是在`border-image`属性再加上一条由渐变生成的垂直条纹，并把要裁剪的长度在渐变中写好，边框的粗细由`border-width`来控制。
+
+``` css
+border-top: .15em solid transparent;
+border-image: 100% 0 0 linear-gradient(90deg, currentColor 4em, transparent 0);
+padding-top: .5em;
+```
+
+![enter description here][41]
+
+使用了`currentColor`属性，会根据color属性的变化而自动适应（假设我们希望这条边框跟文字保持相同颜色）
+
+> correntColor:这是css3中一个颜色的关键字，这个关键字并没有绑定到一个固定的颜色，而是一直被解析为color。
+
+假如我们想要所有水平割线自动与文本颜色保持一致。可以这么写
+
+``` css
+hr {
+	height: .5em;
+	background: currentColor;
+}
+```
+
+很多已有的属性也具有类似的行为。如果你没有给边框指定颜色，它会自动从文本颜色那里得到颜色。
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+
 
 
 
@@ -634,3 +796,9 @@ background-size: 41px 100%, 61px 100%, 83px 100%;
   [33]: ./images/07-1.png "07-1.png"
   [34]: ./images/07-2.png "07-2.png"
   [35]: ./images/07-3.png "07-3.png"
+  [36]: ./images/08-1.png "08-1.png"
+  [37]: ./images/08-2.png "08-2.png"
+  [38]: ./images/08-3.png "08-3.png"
+  [39]: ./images/08-4.png "08-4.png"
+  [40]: ./images/08-5.png "08-5.png"
+  [41]: ./images/08-6.png "08-6.png"
