@@ -170,6 +170,7 @@ css
 
 这种方法的思路是把所有的样式(背景、边框等)应用到伪元素上，然后对伪元素进行变形。
 
+
 ``` css
  .button {
 		position: relative;
@@ -177,22 +178,92 @@ css
 		/* 其他的文字颜色、内外变局等样式*/
 	}
 
-	.button::before {
-		content: '';
-		position: absolute;
-		top: 0;right: 0;bottom: 0;left: 0;
+.button::before {
+	content: '';
+	position: absolute;
+	top: 0;right: 0;bottom: 0;left: 0;
 
-		z-index: -1;
+	z-index: -1;
 
-		background: #58a;
-		transform: skew(-45deg);
-	}
+	background: #58a;
+	transform: skew(-45deg);
+}
 ```
+
 
 ![enter description here][9]
 
 
 要注意几点，一是要给宿主元素设置`position: relative`，并给伪类元素设置`position: absolute`，且偏移量都为0，以便让它在水平和垂直方向上都被拉伸至宿主元素的尺寸。二是伪元素生成的方块是重叠在内容之上的，一旦设置背景，就会遮住内容，应该设置`z-index: -1`或者更小的数，宿主没有设置`z-index`默认为0；
+
+### 3. 菱形图片
+
+> 背景知识：css变形、“平行四边形”
+
+#### 3.1 基于变形的方案
+
+思路：需要把图片用一个<div>包起来，然后对其应用相反的rotate()变形样式。
+
+
+```html
+<div class="picture">
+  <img src="dog.jpg">
+</div>
+```
+
+样式
+
+``` css
+.picture {
+	width: 200px;
+	height: 200px;
+	transform: rotate(45deg);
+	overflow: hidden;
+}
+
+.picture img {
+	max-width: 100%;
+	transform: rotate(-45deg);
+}
+```
+
+并没有发生我们想象的那样，得到一个八角形，还挺好看的，哈啊。
+
+![enter description here][10]
+
+> `totate()`定义 2D 旋转，在参数中规定角度。
+
+为了观察清楚，为容器添加边框
+
+![enter description here][11]
+
+
+出现这样的情况主要是`max-width：100%`，`100%`会被解析为容器(.picture)的边长，但是，我们想要图片的宽度与容器的对角线相等。通过计算可以很快计算出正方形的对角线的长度为`根号2` 乘以正方形的边长。因为`根号2`约等于`1.414`，那么可以设置max-width为`1.141 * 100%`，向上取整为142%。
+
+但是更推荐使用scale属性把图片放大，更合理。
+
+* 我们希望图片的尺寸保留100%这个值，这样当浏览器不支持变形样式时仍然可以得到一个合理的布局
+* 通过scale变形样式来缩放图片，是以它的中心点进行缩放的。通过width属来放大图片时，只会以它的左上角为原点进行缩放，从容迫使我们动用额外的负边距来调整图片。
+
+``` css
+.picture {
+	width: 200px;
+	height: 200px;
+	margin: 100px;
+	transform: rotate(45deg);
+	overflow: hidden;
+}
+
+.picture img {
+	max-width: 100%;
+	transform: rotate(-45deg) scale(1.42);
+}
+```
+
+![enter description here][12]
+
+
+
 
 
   [1]: ./images/01-1.png "01-1.png"
@@ -204,3 +275,6 @@ css
   [7]: ./images/01-6.png "01-6.png"
   [8]: ./images/02-1.png "02-1.png"
   [9]: ./images/02-3.png "02-3.png"
+  [10]: ./images/03-1.png "03-1.png"
+  [11]: ./images/03-2.png "03-2.png"
+  [12]: ./images/03-3.png "03-3.png"
