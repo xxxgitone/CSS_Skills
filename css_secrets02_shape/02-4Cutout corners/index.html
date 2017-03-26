@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+  
+        div {
+            padding: 1em 1.2em;
+            max-width: 12em;
+            color: white;
+            margin: 50px;
+
+            /*一个切角*/
+            /*background: #58a;
+            background: linear-gradient(-45deg, transparent 15px, #58a 0);*/
+            
+            /*两个角*/
+            /*background: #58a;
+            background: linear-gradient(-45deg, transparent 15px, #58a 0) right,
+                linear-gradient(45deg, transparent 15px, #655 0) left;
+            background-size: 50% 100%;
+            background-repeat: no-repeat;*/
+
+            /*四个角*/
+            /*background: #58a;
+            background: linear-gradient(135deg, transparent 15px, #58a 0) top left,
+                 linear-gradient(-135deg, transparent 15px, #58a 0) top right,
+                 linear-gradient(-45deg, transparent 15px, #58a 0) bottom right,
+                 linear-gradient(45deg, transparent 15px, #58a 0) bottom left;
+            background-size: 50% 50%;
+            background-repeat: no-repeat;*/
+
+            /*内凹圆角*/
+            /*background: #58a;
+            background:radial-gradient(circle at top left, transparent 15px, #58a 0) top left,
+                radial-gradient(circle at top right, transparent 15px, #58a 0) top right,
+                radial-gradient(circle at bottom  right, transparent 15px, #58a 0) bottom right,
+                radial-gradient(circle at bottom left, transparent 15px, #58a 0) bottom left;
+            background-size: 50% 50%;
+            background-repeat: no-repeat;*/
+
+            /*SVG*/
+            /*border: 21px solid #58a;
+            
+	        border-image: 1 url('data:image/svg+xml,\
+	                      <svg xmlns="http://www.w3.org/2000/svg" width="3" height="3" fill="%2358a">\
+	                      <polygon points="0,1 1,0 2,0 3,1 3,2 2,3 1,3 0,2" />\
+	                      </svg>');
+            background: radial-gradient(hsla(0, 0%, 100%, .2), #58a);
+            background-clip: padding-box;*/
+
+            /*clip-path*/
+            background: url('dog.jpg');
+            clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px,
+                    100% calc(100% - 20px), calc(100% - 20px) 100%,
+                    20px 100%, 0 calc(100% - 20px), 0 20px);
+            
+            
+            
+        }
+
+
+        
+    </style>
+</head>
+<body>
+    <div>
+        Hey, focus! You’re supposed to be looking at my corners, not reading my text. The text is just placeholder!
+    </div>
+
+</body>
+</html>

@@ -225,7 +225,7 @@ css
 	max-width: 100%;
 	transform: rotate(-45deg);
 }
-```
+```	
 
 并没有发生我们想象的那样，得到一个八角形，还挺好看的，哈啊。
 
@@ -275,13 +275,222 @@ css
 clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
 ```
 
-效果和上面一样。
+上面用逗号分隔，每组数据代表一个坐标点，最后连接起来，就组成一个菱形。效果和上面一样。
+
+还可以增加动画，比如悬停的时候，让图片扩展为完整的面积。
+
+``` css
+img {
+	max-width: 250px;
+	margin: 20px;
+
+	clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+
+	transition: 1s clip-path;
+}
+
+img:hover {
+	clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+```
 
 
+### 4.切角效果
+
+> 背景知识：css渐变、background-size、条纹背景
+
+#### 4.1 直角切角
+
+先实现一个简单的，比如让一个矩形，右下角切掉。实现该功能可以使用强大的渐变功能，有了渐变基础，应该不难理解。
+
+``` css
+ background: #58a;
+ background: linear-gradient(-45deg, transparent 15px, #58a 0);
+```
+
+![enter description here][13]
 
 
+`background: #58a`不是必须的，加上它是为了将其作为回退机制。
 
 
+实现两个切角，左右下角各一个。一层渐变肯定不行，需要两层。按想法一步步实现，首先可能会这样写
+
+``` css
+background: #58a;
+background: linear-gradient(-45deg, transparent 15px, #58a 0),
+	linear-gradient(45deg, transparent 15px, #655 0);
+```
+
+![enter description here][14]
+
+可以看到，效果并没有实现，原因是两层渐变都会填满整个元素，因此它们会相互覆盖。需要让它们缩小一点，使用background-size让每层渐变分别只占据整个元素的一半。
+
+``` css
+ background: #58a;
+background: linear-gradient(-45deg, transparent 15px, #58a 0) right,
+	linear-gradient(45deg, transparent 15px, #655 0) left;
+background-size: 50% 100%;
+```
+
+![enter description here][15]
+
+依然没有达到效果，这是因为没有添加`background-repeat`属性，因而每层渐变图案各自平铺了两次。
+
+``` css
+ background: #58a;
+background: linear-gradient(-45deg, transparent 15px, #58a 0) right,
+	linear-gradient(45deg, transparent 15px, #655 0) left;
+background-size: 50% 100%;
+background-repeat: no-repeat;
+```
+
+![enter description here][16]
+
+好了，现在实现了。如果要四个角的话，就要四层渐变了。
+
+``` css
+background: #58a;
+background: linear-gradient(135deg, transparent 15px, #58a 0) top left,
+	 linear-gradient(-135deg, transparent 15px, #58a 0) top right,
+	 linear-gradient(-45deg, transparent 15px, #58a 0) bottom right,
+	 linear-gradient(45deg, transparent 15px, #58a 0) bottom left;
+background-size: 50% 50%;
+background-repeat: no-repeat;
+```
+
+![enter description here][17]
+
+> 注： 在chrome中运行，发现一个问题，中间会出现一条白线。其他浏览器没有，还没有找到原因，知道的话请点明一下。
+
+![enter description here][18]
+
+
+上面代码的可维护性差，要改变背景的时候，需要修改好多处，可以使用预处理器。这里使用`scss`。
+
+``` scss
+@mixin beveled-corners($bg, $tl:0, $tr:$tl, $br:$tl, $bl:$tr) {
+	background: $bg;
+	background: linear-gradient(135deg, transparent $tl, $bg 0) top left,
+			linear-gradient(-135deg, transparent $tr, $bg 0) top right,
+			linear-gradient(-45deg, transparent $br, $bg 0) bottom right,
+			linear-gradient(45deg, transparent $bl, $bg 0) bottom left;
+	background-size: 50% 50%;
+	background-repeat: no-repeat;
+}
+```
+
+调用的时候传入2~5个参数
+
+``` scss
+@include beveled-corners(#58a, 15px, 5px);
+```
+
+#### 4.2 弧形切角
+
+还可以创建弧形切角（“内凹圆角”），使用径向渐变属性代替上面线性渐变。
+
+``` css
+background: #58a;
+            background:radial-gradient(circle at top left, transparent 15px, #58a 0) top left,
+                radial-gradient(circle at top right, transparent 15px, #58a 0) top right,
+                radial-gradient(circle at bottom  right, transparent 15px, #58a 0) bottom right,
+                radial-gradient(circle at bottom left, transparent 15px, #58a 0) bottom left;
+            background-size: 50% 50%;
+            background-repeat: no-repeat;
+```
+
+上面代码中`circle`指定圆形的径向渐变以及位置。
+
+效果
+
+![enter description here][19]
+
+这里同样可以使用预处理器来封装，类似。
+
+
+#### 4.3 内联SVG与border-image方案
+
+基于渐变的方法有几个缺点：
+* 代码繁琐冗长
+* 不能让各个切角的尺寸以动画的方式发生变化
+
+这里提供另一种方案，使用border-image，之前有提到过基本用。
+
+![enter description here][20]
+
+根据`border-image`工作原理，使用上面SVG图形就可以产生带有切角的边框。黑线是增加的辅助线，描述`border-image`工作原理，将背景图分成九宫格。
+
+由于尺寸无关紧要（border-image会解决缩放问题，而SVG可以实现与尺寸完全无关的完美缩放--矢量图的好处）。每个切片的尺寸都可以设置为1，便于书写。上面就是放大的图。
+
+``` css
+border: 15px solid transparent;
+	        border-image: 1 url('data:image/svg+xml,\
+	                      <svg xmlns="http://www.w3.org/2000/svg" width="3" height="3" fill="%2358a">\
+	                      <polygon points="0,1 1,0 2,0 3,1 3,2 2,3 1,3 0,2" />\
+	                      </svg>');
+```
+
+![enter description here][21]
+
+> 注意：使用的切面尺寸为1，这并不代表1像素，所对应的是SVG文件的坐标系统，所以也不同单位。
+
+
+切角效果出来了，但还缺少整片背景，可以指定一个背景色。还有就是切角没有之前大。原因是在渐变中，这个15px是沿着渐变轴来度量的，它的水平方向和渐变推进的方向一致。边框宽度并不是斜向度量的，而是以水平或垂直方向度量的。
+
+和之前“条纹背景类似”，为了得到相同的尺寸，我们需要把渐变中的尺寸乘以`根号2`，然后才能用在边框宽度属性中。`15*根号2`约等于21px。
+
+``` css
+border: 21px solid transparent;
+border-image: 1 url('data:image/svg+xml,\
+			  <svg xmlns="http://www.w3.org/2000/svg" width="3" height="3" fill="%2358a">\
+			  <polygon points="0,1 1,0 2,0 3,1 3,2 2,3 1,3 0,2" />\
+			  </svg>');
+background: #58a;
+```
+
+![enter description here][22]
+
+啊偶，切角效果没了，换个背景色看看。
+
+![enter description here][23]
+
+还挺好看的，切角还在。原来是因为背景色和切角边框混成一团了，使用`background-clip`修复。
+
+``` css
+border: 21px solid transparent;
+border-image: 1 url('data:image/svg+xml,\
+			  <svg xmlns="http://www.w3.org/2000/svg" width="3" height="3" fill="%2358a">\
+			  <polygon points="0,1 1,0 2,0 3,1 3,2 2,3 1,3 0,2" />\
+			  </svg>');
+background: #58a;
+background-clip: padding-box;
+```
+
+![enter description here][24]
+
+
+效果出来了，还可以增加其他效果，比如背景渐变，切角动画。
+
+![enter description here][25]
+
+
+#### 4.3 裁切路径方案
+
+`boder-image`也有局限。比如我们要么指定某个实色背景，要么指定一个边缘接近某个实色的背景图案。假如我们设置其他类型的背景（比如纹理、平铺图案或一道线性渐变）。
+
+`clip-path`可以打破这种局限。
+
+``` css
+ background: #58a;
+clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px,
+		100% calc(100% - 20px), calc(100% - 20px) 100%,
+		20px 100%, 0 calc(100% - 20px), 0 20px);
+```
+
+可以使用任意背景，还可以是图片
+
+![enter description here][26]
 
 
 
@@ -298,3 +507,17 @@ clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
   [10]: ./images/03-1.png "03-1.png"
   [11]: ./images/03-2.png "03-2.png"
   [12]: ./images/03-3.png "03-3.png"
+  [13]: ./images/04-1.png "04-1.png"
+  [14]: ./images/04-2.png "04-2.png"
+  [15]: ./images/04-3.png "04-3.png"
+  [16]: ./images/04-4.png "04-4.png"
+  [17]: ./images/04-5.png "04-5.png"
+  [18]: ./images/04-6.png "04-6.png"
+  [19]: ./images/04-7.png "04-7.png"
+  [20]: ./images/04-8.png "04-8.png"
+  [21]: ./images/04-9.png "04-9.png"
+  [22]: ./images/04-10.png "04-10.png"
+  [23]: ./images/04-11.png "04-11.png"
+  [24]: ./images/04-12.png "04-12.png"
+  [25]: ./images/04-13.png "04-13.png"
+  [26]: ./images/04-14.png "04-14.png"
