@@ -6,25 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        .picture {
+        /*.picture {*/
             /*border: 1px dotted #333;*/
-            width: 200px;
+            /*width: 200px;
             height: 200px;
             margin: 100px;
             transform: rotate(45deg);
             overflow: hidden;
-        }
+        }*/
 
-        .picture img {
+        /*.picture img {
             max-width: 100%;
             transform: rotate(-45deg) scale(1.42);
+        }*/
+
+        img {
+            max-width: 250px;
+            margin: 20px;
+
+            clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+
+            transition: 1s clip-path;
+        }
+
+        img:hover {
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         }
 
     </style>
 </head>
 <body>
-  <div class="picture">
+  <!--<div class="picture">
       <img src="dog.jpg">
-  </div>
+  </div>-->
+
+  <img src="dog.jpg">
 </body>
 </html>
