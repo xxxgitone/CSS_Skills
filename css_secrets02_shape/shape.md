@@ -492,7 +492,91 @@ clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px,
 
 ![enter description here][26]
 
+### 5. 梯形标签页
+> 背景知识：基本的3D变形，平行四边形
 
+现实的三维世界中旋转一个矩形，由于透视的关系，我们最终看到的二维视图往往是一个梯形。
+
+``` css
+transform: perspective(.5em) rotateX(5deg);
+```
+
+
+* perspective(.5em)为 3D 转换元素定义透视视图,不设置的话看不到3D效果
+*  rotateX(5deg) 定义沿着 X 轴的 3D 旋转。
+
+![enter description here][27]
+
+
+可以生成一个梯形，但是内部的内容不可逆转，不像2D变形。可以使用伪元素。
+
+``` css
+.tab {
+   margin: 3em;
+   position: relative;
+   display: inline-block;
+   padding: .5em 1em .35em;
+   color: white;
+}
+
+.tab::before {
+	content: '';
+	position: absolute;
+	top: 0;right: 0;bottom: 0;left: 0;
+	z-index: -1;
+	background: #58a;
+	transform: perspective(.5em) rotateX(5deg);
+}
+```
+
+![enter description here][28]
+
+现在生成了一个基本的梯形，但是还有许多问题。当我们没有设置`transform-origin`属性时，应用变形效果会让这个元素以它自身的中心线为轴进行空间上的旋转。因此，元素投射到2D屏幕上的尺寸会发生变化。比如宽度会增加，所占位置会稍稍下移，高度会有少许缩减。
+
+我们可以为它指定`transform-origin:bottom`，当在3D空间旋转的时候，可以把它的底边固定住。
+
+``` css
+transform: perspective(.5em) rotateX(5deg);
+transform-origin: bottom;
+```
+
+![enter description here][29]
+
+这样一来只有高度会发生变化，但是高度缩水也非常明显，那么可以在垂直方向使用scaleY()进行放大。
+
+``` css
+transform:scaleY(1.3) perspective(.5em) rotateX(5deg);
+transform-origin: bottom;
+```
+
+![enter description here][30]
+
+使用这个技巧随后为标签页添加样式就变得很方便，
+
+``` css
+nav > a {
+	position: relative;
+	display: inline-block;
+	padding: .3em 1em 0;
+}
+
+nav > a::before {
+	content: ''; 
+	position: absolute;
+	top: 0; right: 0; bottom: 0; left: 0;
+	z-index: -1;
+	border-bottom: none;
+	border-radius: .5em .5em 0 0;
+	background: #ccc linear-gradient(hsla(0,0%,100%,.6), hsla(0,0%,100%,0));
+	box-shadow: 0 .15em white inset;
+	transform: scale(1.1, 1.3) perspective(.5em) rotateX(5deg);
+	transform-origin: bottom;
+}
+```
+
+我们给它添加了背景、边框、圆角、投影等样式，都可以完美生效，我们还可以通过设置`background-origin`为bottom left或bottom right，就可以得到左倾斜或右倾斜的标签页。具体代码可以查看[仓库][31]。
+
+![enter description here][32]
 
 
   [1]: ./images/01-1.png "01-1.png"
@@ -521,3 +605,9 @@ clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px,
   [24]: ./images/04-12.png "04-12.png"
   [25]: ./images/04-13.png "04-13.png"
   [26]: ./images/04-14.png "04-14.png"
+  [27]: ./images/05-1.png "05-1.png"
+  [28]: ./images/05-2.png "05-2.png"
+  [29]: ./images/05-3.png "05-3.png"
+  [30]: ./images/05-4.png "05-4.png"
+  [31]: https://github.com/xxxgitone/CSS_Skills
+  [32]: ./images/05-5.png "05-5.png"
