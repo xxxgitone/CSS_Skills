@@ -3,6 +3,8 @@
 
 ### 目录
 [1.背景与边框][1]
+[2.形状][2]
 
 
   [1]: https://github.com/xxxgitone/CSS_Skills/blob/master/css_secrets01_bg&border/bg&border.md
+  [2]: https://github.com/xxxgitone/CSS_Skills/blob/master/css_secrets02_shape/shape.md

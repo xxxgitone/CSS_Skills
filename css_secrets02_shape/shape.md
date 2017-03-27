@@ -163,6 +163,8 @@ css
 }
 ```
 
+![enter description here][9]
+
 > `skewX()`	定义沿着 X 轴的 2D 倾斜转换。对应还有`skewY(angle)，skew(x-angle,y-angle)`
 
 #### 2.2 伪元素方法
@@ -191,7 +193,7 @@ css
 ```
 
 
-![enter description here][9]
+![enter description here][10]
 
 
 要注意几点，一是要给宿主元素设置`position: relative`，并给伪类元素设置`position: absolute`，且偏移量都为0，以便让它在水平和垂直方向上都被拉伸至宿主元素的尺寸。二是伪元素生成的方块是重叠在内容之上的，一旦设置背景，就会遮住内容，应该设置`z-index: -1`或者更小的数，宿主没有设置`z-index`默认为0；
@@ -229,13 +231,13 @@ css
 
 并没有发生我们想象的那样，得到一个八角形，还挺好看的，哈啊。
 
-![enter description here][10]
+![enter description here][11]
 
 > `totate()`定义 2D 旋转，在参数中规定角度。
 
 为了观察清楚，为容器添加边框
 
-![enter description here][11]
+![enter description here][12]
 
 
 出现这样的情况主要是`max-width：100%`，`100%`会被解析为容器(.picture)的边长，但是，我们想要图片的宽度与容器的对角线相等。通过计算可以很快计算出正方形的对角线的长度为`根号2` 乘以正方形的边长。因为`根号2`约等于`1.414`，那么可以设置max-width为`1.141 * 100%`，向上取整为142%。
@@ -260,7 +262,7 @@ css
 }
 ```
 
-![enter description here][12]
+![enter description here][13]
 
 
 #### 3.2 裁剪路径方案
@@ -308,7 +310,7 @@ img:hover {
  background: linear-gradient(-45deg, transparent 15px, #58a 0);
 ```
 
-![enter description here][13]
+![enter description here][14]
 
 
 `background: #58a`不是必须的，加上它是为了将其作为回退机制。
@@ -322,7 +324,7 @@ background: linear-gradient(-45deg, transparent 15px, #58a 0),
 	linear-gradient(45deg, transparent 15px, #655 0);
 ```
 
-![enter description here][14]
+![enter description here][15]
 
 可以看到，效果并没有实现，原因是两层渐变都会填满整个元素，因此它们会相互覆盖。需要让它们缩小一点，使用background-size让每层渐变分别只占据整个元素的一半。
 
@@ -333,7 +335,7 @@ background: linear-gradient(-45deg, transparent 15px, #58a 0) right,
 background-size: 50% 100%;
 ```
 
-![enter description here][15]
+![enter description here][16]
 
 依然没有达到效果，这是因为没有添加`background-repeat`属性，因而每层渐变图案各自平铺了两次。
 
@@ -345,7 +347,7 @@ background-size: 50% 100%;
 background-repeat: no-repeat;
 ```
 
-![enter description here][16]
+![enter description here][17]
 
 好了，现在实现了。如果要四个角的话，就要四层渐变了。
 
@@ -359,11 +361,11 @@ background-size: 50% 50%;
 background-repeat: no-repeat;
 ```
 
-![enter description here][17]
+![enter description here][18]
 
 > 注： 在chrome中运行，发现一个问题，中间会出现一条白线。其他浏览器没有，还没有找到原因，知道的话请点明一下。
 
-![enter description here][18]
+![enter description here][19]
 
 
 上面代码的可维护性差，要改变背景的时候，需要修改好多处，可以使用预处理器。这里使用`scss`。
@@ -404,7 +406,7 @@ background: #58a;
 
 效果
 
-![enter description here][19]
+![enter description here][20]
 
 这里同样可以使用预处理器来封装，类似。
 
@@ -417,7 +419,7 @@ background: #58a;
 
 这里提供另一种方案，使用border-image，之前有提到过基本用。
 
-![enter description here][20]
+![enter description here][21]
 
 根据`border-image`工作原理，使用上面SVG图形就可以产生带有切角的边框。黑线是增加的辅助线，描述`border-image`工作原理，将背景图分成九宫格。
 
@@ -431,7 +433,7 @@ border: 15px solid transparent;
 	                      </svg>');
 ```
 
-![enter description here][21]
+![enter description here][22]
 
 > 注意：使用的切面尺寸为1，这并不代表1像素，所对应的是SVG文件的坐标系统，所以也不同单位。
 
@@ -449,11 +451,11 @@ border-image: 1 url('data:image/svg+xml,\
 background: #58a;
 ```
 
-![enter description here][22]
+![enter description here][23]
 
 啊偶，切角效果没了，换个背景色看看。
 
-![enter description here][23]
+![enter description here][24]
 
 还挺好看的，切角还在。原来是因为背景色和切角边框混成一团了，使用`background-clip`修复。
 
@@ -467,12 +469,12 @@ background: #58a;
 background-clip: padding-box;
 ```
 
-![enter description here][24]
+![enter description here][25]
 
 
 效果出来了，还可以增加其他效果，比如背景渐变，切角动画。
 
-![enter description here][25]
+![enter description here][26]
 
 
 #### 4.3 裁切路径方案
@@ -490,7 +492,7 @@ clip-path: polygon(20px 0, calc(100% - 20px) 0, 100% 20px,
 
 可以使用任意背景，还可以是图片
 
-![enter description here][26]
+![enter description here][27]
 
 ### 5. 梯形标签页
 > 背景知识：基本的3D变形，平行四边形
@@ -505,7 +507,7 @@ transform: perspective(.5em) rotateX(5deg);
 * perspective(.5em)为 3D 转换元素定义透视视图,不设置的话看不到3D效果
 *  rotateX(5deg) 定义沿着 X 轴的 3D 旋转。
 
-![enter description here][27]
+![enter description here][28]
 
 
 可以生成一个梯形，但是内部的内容不可逆转，不像2D变形。可以使用伪元素。
@@ -529,7 +531,7 @@ transform: perspective(.5em) rotateX(5deg);
 }
 ```
 
-![enter description here][28]
+![enter description here][29]
 
 现在生成了一个基本的梯形，但是还有许多问题。当我们没有设置`transform-origin`属性时，应用变形效果会让这个元素以它自身的中心线为轴进行空间上的旋转。因此，元素投射到2D屏幕上的尺寸会发生变化。比如宽度会增加，所占位置会稍稍下移，高度会有少许缩减。
 
@@ -540,7 +542,7 @@ transform: perspective(.5em) rotateX(5deg);
 transform-origin: bottom;
 ```
 
-![enter description here][29]
+![enter description here][30]
 
 这样一来只有高度会发生变化，但是高度缩水也非常明显，那么可以在垂直方向使用scaleY()进行放大。
 
@@ -549,7 +551,7 @@ transform:scaleY(1.3) perspective(.5em) rotateX(5deg);
 transform-origin: bottom;
 ```
 
-![enter description here][30]
+![enter description here][31]
 
 使用这个技巧随后为标签页添加样式就变得很方便，
 
@@ -574,9 +576,9 @@ nav > a::before {
 }
 ```
 
-我们给它添加了背景、边框、圆角、投影等样式，都可以完美生效，我们还可以通过设置`background-origin`为bottom left或bottom right，就可以得到左倾斜或右倾斜的标签页。具体代码可以查看[仓库][31]。
+我们给它添加了背景、边框、圆角、投影等样式，都可以完美生效，我们还可以通过设置`background-origin`为bottom left或bottom right，就可以得到左倾斜或右倾斜的标签页。具体代码可以查看[仓库][32]。
 
-![enter description here][32]
+![enter description here][33]
 
 
 ### 6. 简单的饼图
@@ -602,7 +604,7 @@ nav > a::before {
 }
 ```
 
-![enter description here][33]
+![enter description here][34]
 
 我们用`yellowgreen`和`#655`两种颜色分别作为背景色和显示比率色，把圆形左右两部分指定为上述两种颜色，然后用伪元素覆盖上去，通过旋转来决定露出多大的扇形。
 
@@ -612,7 +614,7 @@ nav > a::before {
 background-image: linear-gradient(to right, transparent 50%, #655 0);
 ```
 
-![enter description here][34]
+![enter description here][35]
 
 设置伪元素，覆盖
 
@@ -625,7 +627,7 @@ background-image: linear-gradient(to right, transparent 50%, #655 0);
 }
 ```
 
-![enter description here][35]
+![enter description here][36]
 
 给伪元素添加边框可以看到，伪元素现在相对于整个饼图进行了重叠。不过现在还没有设置样式，它起不到遮盖作用：暂时是个透明的矩形。
 
@@ -647,7 +649,7 @@ background-image: linear-gradient(to right, transparent 50%, #655 0);
 }
 ```
 
-![enter description here][36]
+![enter description here][37]
 
 好了，现在覆盖住了。现在我们可以通过一个`rotate()`变形属性来让这个伪元素转起来。如果我们要显示`20%`的比率，可以指定旋转的值为`72deg(0.2*360=72)`,写成`.2turn（圈）`更加直观。
 
@@ -655,11 +657,11 @@ background-image: linear-gradient(to right, transparent 50%, #655 0);
 transform: rotate(.2turn);
 ```
 
-![enter description here][37]
+![enter description here][38]
 
 可以显示了，我们在0到50%的比率时都可以正常，但是超过50%后，比如60%的时候，就会是这样
 
-![enter description here][38]
+![enter description here][39]
 
 如果把50%~100%的比率看所另外一个问题，我们可以发现，可以使用上述技巧的一个反向版本来实现这个范围，设置一个棕色的伪元素，让它在0至.5turn的范围内旋转。因此要得到一个60%比率的饼图，可以这样
 
@@ -677,7 +679,7 @@ transform: rotate(.2turn);
 	}
 ```
 
-![enter description here][39]
+![enter description here][40]
 
 由于找到了实现任意值比率的方法，我们可以用css动画来实现一个饼图从0变化到100%的动画，从而得到一个炫酷的进度指示器
 
@@ -775,7 +777,7 @@ pie.forEach(pie => {
 ```
 
 
-![enter description here][40]
+![enter description here][41]
 
 我们保留了文字，因为需要它来确保可访问性和可用性。可以通过`color：transparent`来把文字隐藏起来，同时还保证了可访问性，因为文字仍然是可以被选中和打印的，进一步优化，把文字比率放在饼图中心，方便选中
 
@@ -824,11 +826,6 @@ pie.forEach(pie => {
 ```
 
 
-
-
-
-
-
   [1]: ./images/01-1.png "01-1.png"
   [2]: ./images/01-2.png "01-2.png"
   [3]: ./images/01-3.png "01-3.png"
@@ -837,35 +834,36 @@ pie.forEach(pie => {
   [6]: ./images/01-5.png "01-5.png"
   [7]: ./images/01-6.png "01-6.png"
   [8]: ./images/02-1.png "02-1.png"
-  [9]: ./images/02-3.png "02-3.png"
-  [10]: ./images/03-1.png "03-1.png"
-  [11]: ./images/03-2.png "03-2.png"
-  [12]: ./images/03-3.png "03-3.png"
-  [13]: ./images/04-1.png "04-1.png"
-  [14]: ./images/04-2.png "04-2.png"
-  [15]: ./images/04-3.png "04-3.png"
-  [16]: ./images/04-4.png "04-4.png"
-  [17]: ./images/04-5.png "04-5.png"
-  [18]: ./images/04-6.png "04-6.png"
-  [19]: ./images/04-7.png "04-7.png"
-  [20]: ./images/04-8.png "04-8.png"
-  [21]: ./images/04-9.png "04-9.png"
-  [22]: ./images/04-10.png "04-10.png"
-  [23]: ./images/04-11.png "04-11.png"
-  [24]: ./images/04-12.png "04-12.png"
-  [25]: ./images/04-13.png "04-13.png"
-  [26]: ./images/04-14.png "04-14.png"
-  [27]: ./images/05-1.png "05-1.png"
-  [28]: ./images/05-2.png "05-2.png"
-  [29]: ./images/05-3.png "05-3.png"
-  [30]: ./images/05-4.png "05-4.png"
-  [31]: https://github.com/xxxgitone/CSS_Skills
-  [32]: ./images/05-5.png "05-5.png"
-  [33]: ./images/06-1.png "06-1.png"
-  [34]: ./images/06-2.png "06-2.png"
-  [35]: ./images/06-3.png "06-3.png"
-  [36]: ./images/06-4.png "06-4.png"
-  [37]: ./images/06-5.png "06-5.png"
-  [38]: ./images/06-6.png "06-6.png"
-  [39]: ./images/06-7.png "06-7.png"
-  [40]: ./images/06-8.png "06-8.png"
+  [9]: ./images/02-2.png "02-2.png"
+  [10]: ./images/02-3.png "02-3.png"
+  [11]: ./images/03-1.png "03-1.png"
+  [12]: ./images/03-2.png "03-2.png"
+  [13]: ./images/03-3.png "03-3.png"
+  [14]: ./images/04-1.png "04-1.png"
+  [15]: ./images/04-2.png "04-2.png"
+  [16]: ./images/04-3.png "04-3.png"
+  [17]: ./images/04-4.png "04-4.png"
+  [18]: ./images/04-5.png "04-5.png"
+  [19]: ./images/04-6.png "04-6.png"
+  [20]: ./images/04-7.png "04-7.png"
+  [21]: ./images/04-8.png "04-8.png"
+  [22]: ./images/04-9.png "04-9.png"
+  [23]: ./images/04-10.png "04-10.png"
+  [24]: ./images/04-11.png "04-11.png"
+  [25]: ./images/04-12.png "04-12.png"
+  [26]: ./images/04-13.png "04-13.png"
+  [27]: ./images/04-14.png "04-14.png"
+  [28]: ./images/05-1.png "05-1.png"
+  [29]: ./images/05-2.png "05-2.png"
+  [30]: ./images/05-3.png "05-3.png"
+  [31]: ./images/05-4.png "05-4.png"
+  [32]: https://github.com/xxxgitone/CSS_Skills
+  [33]: ./images/05-5.png "05-5.png"
+  [34]: ./images/06-1.png "06-1.png"
+  [35]: ./images/06-2.png "06-2.png"
+  [36]: ./images/06-3.png "06-3.png"
+  [37]: ./images/06-4.png "06-4.png"
+  [38]: ./images/06-5.png "06-5.png"
+  [39]: ./images/06-6.png "06-6.png"
+  [40]: ./images/06-7.png "06-7.png"
+  [41]: ./images/06-8.png "06-8.png"
