@@ -579,6 +579,256 @@ nav > a::before {
 ![enter description here][32]
 
 
+### 6. 简单的饼图
+
+> 背景知识：css渐变、基本的SVG、css动画、条纹背景、自适应椭圆
+
+基于transform的解决方案
+
+这个方案的解构层上是最佳选择，只需要一个元素作为容器，其余部分用伪元素、变形属性和css渐变完成。
+
+``` html
+<div class="pie"></div>
+```
+
+画一个简单饼图，展示比率是固定的20%。先画一个圆
+
+``` css
+.pie {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	background:yellowgreen;
+}
+```
+
+![enter description here][33]
+
+我们用`yellowgreen`和`#655`两种颜色分别作为背景色和显示比率色，把圆形左右两部分指定为上述两种颜色，然后用伪元素覆盖上去，通过旋转来决定露出多大的扇形。
+
+将右半部分设置为棕色，通过线性渐变
+
+``` css
+background-image: linear-gradient(to right, transparent 50%, #655 0);
+```
+
+![enter description here][34]
+
+设置伪元素，覆盖
+
+``` css
+.pie::before {
+	content: '';
+	display: block;
+	margin-left: 50%;
+	height: 100%;
+}
+```
+
+![enter description here][35]
+
+给伪元素添加边框可以看到，伪元素现在相对于整个饼图进行了重叠。不过现在还没有设置样式，它起不到遮盖作用：暂时是个透明的矩形。
+
+观察和分析：
+
+* 希望这个伪元素能遮盖住圆形中的棕色部分，应该制定绿色背景。使用`background-color:inherit`声明可以避免代码重复
+* 希望它是绕着圆形的圆心来旋转的，对它自己来说，这个点就是它左边缘的中心点。可以写成`transform-origin：left`
+* 不希望呈现出矩形的形状，否则它会突破整个饼图的圆形范围，于是给`.pie`设置`overflow：hidden`，要么给这个伪元素指定合适的`border-radius`来变成一个半圆。
+
+``` css
+.pie::before {
+	content: '';
+	display: block;
+	margin-left: 50%;
+	height: 100%;
+	border-radius: 0 100% 100% 0 / 50%;
+	background-color: inherit;
+	transform-origin: left;
+}
+```
+
+![enter description here][36]
+
+好了，现在覆盖住了。现在我们可以通过一个`rotate()`变形属性来让这个伪元素转起来。如果我们要显示`20%`的比率，可以指定旋转的值为`72deg(0.2*360=72)`,写成`.2turn（圈）`更加直观。
+
+``` css
+transform: rotate(.2turn);
+```
+
+![enter description here][37]
+
+可以显示了，我们在0到50%的比率时都可以正常，但是超过50%后，比如60%的时候，就会是这样
+
+![enter description here][38]
+
+如果把50%~100%的比率看所另外一个问题，我们可以发现，可以使用上述技巧的一个反向版本来实现这个范围，设置一个棕色的伪元素，让它在0至.5turn的范围内旋转。因此要得到一个60%比率的饼图，可以这样
+
+``` css
+.pie::before {
+		content: '';
+		display: block;
+		margin-left: 50%;
+		height: 100%;
+		border-radius: 0 100% 100% 0 / 50%;
+		background: #655;
+		transform-origin: left;
+
+		transform: rotate(.1turn);
+	}
+```
+
+![enter description here][39]
+
+由于找到了实现任意值比率的方法，我们可以用css动画来实现一个饼图从0变化到100%的动画，从而得到一个炫酷的进度指示器
+
+``` css
+.pie::before {
+	content: '';
+	display: block;
+	margin-left: 50%;
+	height: 100%;
+	border-radius: 0 100% 100% 0 / 50%;
+	background-color: inherit;
+	transform-origin: left;
+	animation: spin 3s linear infinite,
+			bg 6s step-end infinite;
+}
+
+@keyframes spin {
+	to { transform: rotate(.5turn); }
+}
+
+@keyframes bg {
+	50% { background: #655; }
+}
+```
+
+但是怎么做出多个不同比率的静态饼图呢？
+
+我们希望这种方式来书写结构
+
+``` html
+<div class="pie">20%</div>
+<div class="pie">60%</div>
+```
+
+就能得到两个饼图，一个展示为20%和一个展示为60%。探索如何用内联样式来实现这个需求，再通过一小段脚本代码来解析文本内容并把内联样式添加到元素上去，以实现代码的优雅性、封装抽象性、可维护性以及最重要的可访问性。
+
+用内联样式来控制饼图的比率有一个很大的挑战：这些负责设置比率的css代码最终要应用到伪元素身上，无法为伪元素设置内联样式。
+
+用动画的方法来解决（眼珠子都掉下来，动画还有这功能），不过动画必须处于暂停状态。使用负的动画延时来直接调至动画中任意的时间点。看看负`animation-delay`的解释
+
+“一个负的延时值是合法的，与0s的延时类似，它意味着动画会立即开始播放，但会自动前进到延时值的绝对定位处，就好像动画在过去已经播放了指定的时间一样。因此实际效果就是动画跳过指定的时间而从中间开始播放了”
+
+我们动画是暂停的，所以动画的第一帧将是唯一显示出的那一帧。在饼图中显示出的比率就是我们`animation-delay`的值在总动画持续时间中所占比率。比如，如果动画持续时间是`6s`，只需要把animation-delay的值设为`-1.2s`，就能显示出`20%`的比率。为了简化计算过程，设置一个长达100s的持续时间。动画是暂停的，不会有影响。
+
+最后一个问题：动画是作用在伪元素上的，但希望最终内联样式可以设置在.pie上，由于div上没有任何动画效果，我们可以用内联样式的方式为其设置`animation-delay`属性，然后伪元素`inherit`继承。
+
+结构代码
+
+
+```html
+<div class="pie" style="animation-delay: -20s">20%</div>
+<div class="pie" style="animation-delay: -60s">20%</div>
+```
+`.pie`代码不变，变化的代码下面显示
+
+``` css
+.pie::before {
+	content: '';
+	display: block;
+	margin-left: 50%;
+	height: 100%;
+	border-radius: 0 100% 100% 0 / 50%;
+	background-color: inherit;
+	transform-origin: left;
+	animation: spin 50s linear infinite,
+			bg 100s step-end infinite;
+	animation-play-state: paused;
+	animation-delay: inherit;
+}
+
+@keyframes spin {
+	to { transform: rotate(.5turn); }
+}
+
+@keyframes bg {
+	50% { background: #655; }
+}
+```
+
+脚本代码
+
+``` javascript
+const pie = document.querySelectorAll('.pie');
+pie.forEach(pie => {
+	const p = parseFloat(pie.textContent);
+	pie.style.animationDelay = `-${p}s`;
+})
+```
+
+结构代码
+
+```html
+<div class="pie">20%</div>
+<div class="pie">60%</div>
+```
+
+
+![enter description here][40]
+
+我们保留了文字，因为需要它来确保可访问性和可用性。可以通过`color：transparent`来把文字隐藏起来，同时还保证了可访问性，因为文字仍然是可以被选中和打印的，进一步优化，把文字比率放在饼图中心，方便选中
+
+* 把饼图的`height`换成`line-height`
+* 通过绝对定位来完成对伪元素尺寸的尺寸设置和定位操作，这样它就不会把文字推到下面了
+* 增加`text-align：center`来实现居中
+
+最终代码
+
+``` css
+   .pie {
+		margin: 50px;
+
+		position: relative;
+
+		line-height: 100px;
+		width: 100px;
+		border-radius: 50%;
+		background:yellowgreen;
+		background-image: linear-gradient(to right, transparent 50%, #655 0);
+		color: transparent;
+		text-align: center;
+	}
+
+	.pie::before {
+		content: '';
+		position: absolute;
+		top:0;left:50%;
+		width: 50%;height: 100%;
+		border-radius: 0 100% 100% 0 / 50%;
+		background-color: inherit;
+		transform-origin: left;
+		animation: spin 50s linear infinite,
+				bg 100s step-end infinite;
+		animation-play-state: paused;
+		animation-delay: inherit;
+	}
+
+	@keyframes spin {
+		to { transform: rotate(.5turn); }
+	}
+
+	@keyframes bg {
+		50% { background: #655; }
+	}
+```
+
+
+
+
+
+
+
   [1]: ./images/01-1.png "01-1.png"
   [2]: ./images/01-2.png "01-2.png"
   [3]: ./images/01-3.png "01-3.png"
@@ -611,3 +861,11 @@ nav > a::before {
   [30]: ./images/05-4.png "05-4.png"
   [31]: https://github.com/xxxgitone/CSS_Skills
   [32]: ./images/05-5.png "05-5.png"
+  [33]: ./images/06-1.png "06-1.png"
+  [34]: ./images/06-2.png "06-2.png"
+  [35]: ./images/06-3.png "06-3.png"
+  [36]: ./images/06-4.png "06-4.png"
+  [37]: ./images/06-5.png "06-5.png"
+  [38]: ./images/06-6.png "06-6.png"
+  [39]: ./images/06-7.png "06-7.png"
+  [40]: ./images/06-8.png "06-8.png"

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        /*.pie {
+            margin: 50px;
+
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background:yellowgreen;
+            background-image: linear-gradient(to right, transparent 50%, #655 0);
+        }
+
+        .pie::before {
+            content: '';
+            display: block;
+            margin-left: 50%;
+            height: 100%;
+            border-radius: 0 100% 100% 0 / 50%;
+            background-color: inherit;
+            transform-origin: left;
+            animation: spin 3s linear infinite,
+                    bg 6s step-end infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(.5turn); }
+        }
+
+        @keyframes bg {
+            50% { background: #655; }
+        }*/
+
+        .pie {
+            margin: 50px;
+
+            position: relative;
+
+            line-height: 100px;
+            width: 100px;
+            border-radius: 50%;
+            background:yellowgreen;
+            background-image: linear-gradient(to right, transparent 50%, #655 0);
+            color: transparent;
+            text-align: center;
+        }
+
+        .pie::before {
+            content: '';
+            position: absolute;
+            top:0;left:50%;
+            width: 50%;height: 100%;
+            border-radius: 0 100% 100% 0 / 50%;
+            background-color: inherit;
+            transform-origin: left;
+            animation: spin 50s linear infinite,
+                    bg 100s step-end infinite;
+            animation-play-state: paused;
+            animation-delay: inherit;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(.5turn); }
+        }
+
+        @keyframes bg {
+            50% { background: #655; }
+        }
+
+
+    </style>
+</head>
+<body>
+    <!--<div class="pie">
+    </div>-->
+
+    <div class="pie">20%</div>
+    <div class="pie">60%</div>
+    
+    <script>
+        const pie = document.querySelectorAll('.pie');
+        pie.forEach(pie => {
+            const p = parseFloat(pie.textContent);
+            pie.style.animationDelay = `-${p}s`;
+        })
+    </script>
+
+</body>
+</html>
