@@ -59,9 +59,46 @@ box-shadow: 5px 0 5px -5px black,
 ![enter description here][4]
 
 
+### 2. 不规则投影
+
+当元素添加了伪元素或半透明背景的时候，box-shadow会变得力不从心，出现一些问题，有些原理之前已经讲到过。
+
+对下面三种情况的元素都使用了`box-shadow: .1em .1em .3em rgba(0, 0, 0, .5);`
+
+比如，用伪元素生成气泡的小尾巴后，再对气泡使用投影，投影效果不会在小尾巴上显现。
+
+![enter description here][5]
+
+对元素使用了透明背景，投影会忽视透明部分。
+
+![enter description here][6]
+
+切角效果
+
+![enter description here][7]
+
+等等。
+
+使用filter属性来解决，目前为止IE11还不支持，其他基本支持。filter实行从SVG借鉴过来的。我们使用其中一个函数`drop-down()`，跟`box-shadow`很相像，但不包括扩张半径和`inset`值。
+
+可以这样改写
+
+``` css
+filter: drop-shadow(.1em .1em .1em rgba(0,0,0,.5));
+```
+
+最终效果
+
+![enter description here][8]
+
+
 
 
   [1]: ./images/01-1.png "01-1.png"
   [2]: ./images/01-2.png "01-2.png"
   [3]: ./images/01-3.png "01-3.png"
   [4]: ./images/01-4.png "01-4.png"
+  [5]: ./images/02-1.png "02-1.png"
+  [6]: ./images/02-2.png "02-2.png"
+  [7]: ./images/02-3.png "02-3.png"
+  [8]: ./images/02-4.png "02-4.png"
