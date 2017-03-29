@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        /*img {
+            margin: 3.2em;
+            max-width: 250px;
+            filter: sepia() saturate(4) hue-rotate(295deg);
+            transition: 1s filter;
+        }
+
+        img:hover,img:focus {
+            filter:none
+        }*/
+
+        /*a {
+            display: block;
+            max-width: 250px;
+            background: hsl(335, 100%, 50%);
+        }
+
+        img {
+            width: 100%;
+            mix-blend-mode: luminosity;
+        }*/
+
+        .dog {
+            width: 640px; height: 440px;
+            background-size: cover;
+            background-color: hsl(335, 100%, 50%);
+            background-blend-mode: luminosity;
+            transition: .5s background-color;
+        }
+
+        .dog:hover {
+            background-color: transparent;
+        }
+
+    </style>
+</head>
+<body>
+    <!--<img src="dog.jpg" />-->
+
+    <!--<a href="#">
+        <img src="dog.jpg">
+    </a>-->
+
+    <div class="dog" style="background-image: url('dog.jpg')">
+        
+    </div>
+</body>
+</html>

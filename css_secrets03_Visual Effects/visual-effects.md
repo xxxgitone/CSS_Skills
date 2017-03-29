@@ -91,6 +91,116 @@ filter: drop-shadow(.1em .1em .1em rgba(0,0,0,.5));
 
 ![enter description here][8]
 
+### 3. 染色效果
+
+使用`<canvas>`也可以实现，这里探讨css方法的实现。
+
+#### 3.1 基于滤镜的方案
+由于没有一种现成的滤镜是专门为这个效果而设计的，所以需要使用多个滤镜组合起来。
+
+第一个滤镜是`sepia()`,它会给图片增加一种饱和度的橙黄色染色效果，几乎所有的色相值都被收敛在35~40之间。
+
+``` css
+filter: sepia();
+```
+
+![enter description here][9]
+
+如果想要主色调的饱和度比这个高，可以用`staturate()`l滤镜来给每个像素提升饱和度。具体多少可以根据实际情况。
+
+``` css
+filter: sepia() saturate(4);
+```
+
+![enter description here][10]
+
+但是我们想要一种亮粉色的，则还需要再添加一个`hue-rotate()`滤镜，把每个像素的色相以指定的度数进行偏移。为了把原来的色相值40提升至335，需要增大（335 - 40）= 295度
+
+``` css
+filter: sepia() saturate(4) hue-rotate(295deg);
+```
+
+![enter description here][11]
+
+添加一个hover来触发切换
+
+``` css
+img {
+	max-width: 250px;
+	filter: sepia() saturate(4) hue-rotate(295deg);
+	transition: 1s filter;
+}
+
+img:hover,img:focus {
+	filter:none
+}
+```
+
+#### 3.2 基于混合模式的方案
+
+当两个元素叠加时，“混合模式”控制了上层元素的颜色与下层颜色进行混合的方式。用它来实现染色效果，需要用到的混合模式是`luminosity`，这种模式会保留上层元素的HSL亮度信息，并从它的下层吸取色相的饱和度信息。所以如果我们将主色调放在下层，待处理的图片放在上层，就相当于进行染色了。当然IE11肯定是不支持的
+
+对一个元素设置混合模式，有两个属性可以用：`mix-blend-mode`可以为整个元素设置混合模式，`background-blend-mode`可以为每层背景单独指定混合模式。所以有两种选择
+
+* 需要把图片包裹在一个容器中，并把容器的背景设置为我们想要的主色调
+* 不用图片元素，而用div元素，把这个元素的第一层背景设置为要染色的图片第二层的背景设置为我们想要的主色调
+
+``` html
+ <a href="#">
+	<img src="dog.jpg">
+</a>
+```
+
+几行声明就可以解决
+
+``` css
+a {
+		display: block;
+		max-width: 250px;
+		background: hsl(335, 100%, 50%);
+	}
+
+	img {
+		width: 100%;
+		mix-blend-mode: luminosity;
+	}
+```
+
+mix-blend-mode是把整个元素向下进行混合，而不管下面是什么。因此只要把这个属性设置为luminosity混合模式，那图片总会跟某些东西进行混合。此外，使用background-blend-mode属性则可以让每层背景跟它的下层背景进行混合，但不关心元素之外是什么情况。所以，当我们只有一个背景图像以及一个透明的背景色时，就不会出现任何混合效果。利用此特点可以制作动画
+
+``` html
+<div class="dog" style="background-image: url('dog.jpg')">
+    </div>
+```
+
+```css
+.dog {
+		width: 640px; height: 440px;
+		background-size: cover;
+		background-color: hsl(335, 100%, 50%);
+		background-blend-mode: luminosity;
+		transition: .5s background-color;
+	}
+
+	.dog:hover {
+		background-color: transparent;
+	}
+```
+
+两种方法都不够理想
+
+* 图片的尺寸需要在css中写死
+* 在语义上，这个元素不是一张图片
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -102,3 +212,6 @@ filter: drop-shadow(.1em .1em .1em rgba(0,0,0,.5));
   [6]: ./images/02-2.png "02-2.png"
   [7]: ./images/02-3.png "02-3.png"
   [8]: ./images/02-4.png "02-4.png"
+  [9]: ./images/03-1.png "03-1.png"
+  [10]: ./images/03-2.png "03-2.png"
+  [11]: ./images/03-3.png "03-3.png"
