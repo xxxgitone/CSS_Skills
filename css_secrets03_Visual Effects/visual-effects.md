@@ -49,7 +49,7 @@ box-shadow: 3px 3px 6px -3px black;
 ![enter description here][3]
 
 #### 1.3 双侧投影
-用来那个卡U呢投影（每边个一块）来达到目的。基本上就是把"单侧投影"中的技巧运用两次
+用上面的单侧投影（每边个一块）来达到目的。基本上就是把"单侧投影"中的技巧运用两次
 
 ``` css
 box-shadow: 5px 0 5px -5px black,
@@ -166,7 +166,7 @@ a {
 	}
 ```
 
-mix-blend-mode是把整个元素向下进行混合，而不管下面是什么。因此只要把这个属性设置为luminosity混合模式，那图片总会跟某些东西进行混合。此外，使用background-blend-mode属性则可以让每层背景跟它的下层背景进行混合，但不关心元素之外是什么情况。所以，当我们只有一个背景图像以及一个透明的背景色时，就不会出现任何混合效果。利用此特点可以制作动画
+`mix-blend-mode`是把整个元素向下进行混合，而不管下面是什么。因此只要把这个属性设置为`luminosity`混合模式，那图片总会跟某些东西进行混合。此外，使用`background-blend-mode`属性则可以让每层背景跟它的下层背景进行混合，但不关心元素之外是什么情况。所以，当我们只有一个背景图像以及一个透明的背景色时，就不会出现任何混合效果。利用此特点可以制作动画
 
 ``` html
 <div class="dog" style="background-image: url('dog.jpg')">
@@ -192,16 +192,110 @@ mix-blend-mode是把整个元素向下进行混合，而不管下面是什么。
 * 图片的尺寸需要在css中写死
 * 在语义上，这个元素不是一张图片
 
+### 4. 毛玻璃效果
 
+使用半透明颜色作为背景，然后将其放在图片或花哨的背景之上，会产生不错的效果。不过也可能导致文字很难阅读。
 
+``` html
+<main>
+	<blockquote>
+		“The only way to get rid of a temptation is to yield to it. Resist it, and your soul grows sick with longing for the things it has forbidden to itself, with desire for what its monstrous laws have made monstrous and unlawful.”
+		<footer>- 
+			<cite>Oscar Wilde, The Picture of Dorian Gray</cite>
+		</footer>
+	</blockquote>
+</main>
+```
 
+关键css代码可能是
 
+``` css
+body {
+		background: url("http://csssecrets.io/images/tiger.jpg") 0 / cover fixed;
+	}
 
+main {
+	background: hsla(0,0%,100%,.25) border-box;
+}
+```
 
+最后效果
 
+![enter description here][12]
 
+上面的`fixed`表示`background-attachment:fixed`,设置背景图像固定，不会随着页面的其余部分滚动。
 
+效果图文字有些难以看清，背景图过于花哨。可以通过提升背景色的不透明度来则增加文本的可读性，不过效果就那么生动。下面的图是将不透明度调整为.5，一点都不好看。
 
+![enter description here][13]
+
+解决这个问题的方案通常是将覆盖的那部分图片区做模糊处理。在css中可以使用滤镜，blur()对元素进行模糊处理。
+
+不过直接处理也不行，会导致文字无法阅读。需要另找办法
+
+![enter description here][14]
+
+由于不能直接对元素本生进行模糊处理，可以选择对一个伪元素进行处理，然乎将它定位到元素下层。
+
+下面是主要代码
+
+``` css
+main {
+	position: relative;
+	
+	/*其他样式*/
+}
+
+body,main::before {
+	background: url("http://csssecrets.io/images/tiger.jpg") 0 / cover fixed;
+}
+main::before {
+		content: '';
+		position: absolute;
+		top: 0;right: 0;bottom: 0;left: 0; /*设置全部偏移量为0，可以将它完整覆盖在宿主元素上*/
+		z-index: -1;
+		filter: blur(20px);
+	}
+```
+
+![enter description here][15]
+
+将伪元素的背景图设置成body的一致，`z-index: -1`是将它置于`main`元素之下，然后对伪元素惊醒模糊处理。
+
+大部分效果可以出来了，不过仔细可以看出来，模糊效果在接近边缘处会逐渐消退。因为模糊效果会削减实色像素所能覆盖的范围，削减的半径正是模糊半径的长度。可以对伪元素设置成红色背景，方便看清真像。
+
+![enter description here][16]
+
+可以让伪元素相对其宿主元素的尺寸再向外扩大至少`20px`(即模糊半径)，可以通过`-20px`的外变局来实现。保险起见，用一个更大的绝对值`（-30px）`.
+
+![enter description here][17]
+
+但是周边又出现一圈模糊效果，因为超出了容器，使用`hidden`即可
+
+``` css
+ main {
+	 position: relative；
+	overflow: hidden;
+	background: hsla(0,0%,100%,.3) border-box;
+}
+
+body,main::before {
+	background: url("http://csssecrets.io/images/tiger.jpg") 0 / cover fixed;
+}
+
+main::before {
+	content: '';
+	position: absolute;
+	top: 0;right: 0;bottom: 0;left: 0;
+	z-index: -1;
+	filter: blur(20px);
+	margin: -30px;
+}
+```
+
+![enter description here][18]
+
+现在毛玻璃效果完美了。
 
 
   [1]: ./images/01-1.png "01-1.png"
@@ -215,3 +309,10 @@ mix-blend-mode是把整个元素向下进行混合，而不管下面是什么。
   [9]: ./images/03-1.png "03-1.png"
   [10]: ./images/03-2.png "03-2.png"
   [11]: ./images/03-3.png "03-3.png"
+  [12]: ./images/04-1.png "04-1.png"
+  [13]: ./images/04-2.png "04-2.png"
+  [14]: ./images/04-3.png "04-3.png"
+  [15]: ./images/04-4.png "04-4.png"
+  [16]: ./images/04-5.png "04-5.png"
+  [17]: ./images/04-6.png "04-6.png"
+  [18]: ./images/04-7.png "04-7.png"
