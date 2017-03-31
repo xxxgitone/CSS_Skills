@@ -297,6 +297,194 @@ main::before {
 
 现在毛玻璃效果完美了。
 
+### 5. 折角效果
+
+> 背景知识：css变形，css渐变、切角效果
+
+#### 5.1 45°折角
+
+第一步实现一个切角效果
+
+``` css
+div {
+		background: #58a;
+		background: linear-gradient(-135deg, transparent 2em, #58a 0);
+	}
+```
+
+![enter description here][19]
+
+然后增加一个暗色的三角形来实现翻折效果。实现方法就是增加一层渐变来生成这个三角形并将其定位在右上角，可以通过`background-size`来控制折角的大小。折页部分三角形放在切角渐变之上。
+
+``` css
+div {
+	background: #58a;
+				background: linear-gradient(to left bottom, 
+					transparent 50%, rgba(0, 0%, 0, .4) 0) no-repeat 100% 0 / 2em 2em,
+				   linear-gradient(-135deg, transparent 2em, #58a 0);
+}
+```
+
+![enter description here][20]
+
+并没有达到我们想要的效果，原因跟（二）中切角效果一样，第二层渐变中的`2em`折角尺寸是写在色标中的，因此是沿着渐变轴进行度量的，是对角线尺寸。然而在`background-size`中的`2em`长度是背景贴片的宽度和高，是在水平和垂直方向上度量的。
+
+有两种方式调整：
+
+* 保留对角线的`2em`长度，将`background-size`乘以`根号2`
+* 保留水平和垂直方向上的`2em`，就要切角渐变的角标位置值除以`根号2`
+
+但是推荐使用第二种方式，绝大多数的css度量都不是在对角线上的。所以色标的位置值为`2`除以`根号2`等于`根号2`，约等于`1.414`。
+
+``` css
+div {
+	background: #58a;
+				background: linear-gradient(to left bottom, 
+					transparent 50%, rgba(0, 0%, 0, .4) 0) no-repeat 100% 0 / 2em 2em,
+				   linear-gradient(-135deg, transparent 1.5em, #58a 0);
+}
+```
+
+![enter description here][21]
+
+#### 5.2 其他角度
+45度角的折角不是很常用，可以改变折角角度，比如-150deg可以产生30度的切角，但也意味着计算折角三角形的边长也要复杂点了。
+
+使用三角函数计算边长，折角三角形为30-60-90的直角三角形，所以
+
+![enter description here][22]
+
+``` css
+background: #58a;
+background: linear-gradient(to left bottom, 
+	transparent 50%, rgba(0, 0, 0, .4) 0) no-repeat 100% 0 / 3em 1.73em,
+   linear-gradient(-150deg, transparent 1.414em, #58a 0);
+```
+
+![enter description here][23]
+
+这个折角并不真实，拿纸折一下就可以看出来了。
+
+这个折角三角形需要旋转，但是背景不能旋转，可以使用伪元素。
+
+``` css
+div {
+	position: relative;
+	background: #58a;
+	background: linear-gradient(-150deg, transparent 1.414em, #58a 0);
+
+}
+
+div::before {
+	content: '';
+	position: absolute;
+	top: 0;right: 0;
+	background: linear-gradient(to left bottom, 
+		transparent 50%, rgba(0, 0, 0, .4) 0) no-repeat 100% 0 / 3em 1.73em;
+	width: 3em;
+	height: 1.7em;
+}
+```
+
+实现了跟上面相同的效果，然后旋转
+
+下一步将把折页三角形的宽高对调，以此改变它 的方向，然后再逆时针30来旋转这个折页三角形。
+
+``` css
+height: 1.73em;
+width: 3em;
+transform: rotate(-30deg);
+```
+
+![enter description here][24]
+
+为了平移简单，将`transform-origin`设置为`bottom right`即三角形的右下角成为旋转的中心
+
+![enter description here][25]
+
+通过图和上面数据可知，垂直偏量为x - y = 3 - √3 = 1.3.
+
+``` css
+div::before {
+		/*其他样式*/
+		transform:  translateY(-1.3em) rotate(-30deg);
+		transform-origin: bottom right;
+	}
+```
+
+![enter description here][26]
+
+为了更真实一点，增加圆角，渐变以及投影。
+
+``` css
+   div {
+		position: relative;
+		background: #58a;
+		background: linear-gradient(-150deg, transparent 1.414em, #58a 0);
+		border-radius: .5em;
+	}
+
+	div::before {
+		content: '';
+		position: absolute;
+		top: 0;right: 0;
+		background: linear-gradient(to left bottom, 
+			transparent 50%, rgba(0, 0, 0, .2) 0, rgba(0, 0, 0, .4)) no-repeat 100% 0;
+		width: 1.73em;
+		height: 3em;
+		transform:  translateY(-1.3em) rotate(-30deg);
+		transform-origin: bottom right;
+		border-bottom-left-radius: inherit;
+		box-shadow: -.2em .2em .3em -.1em rgba(0, 0, 0, .15);
+	}
+```
+
+![enter description here][27]
+
+为了方便复，可以使用scss
+
+``` scss
+@mixin folded-corner($bg, $size, $angle:30deg){
+
+	position: relative;
+	background: $bg;
+	background: linear-gradient($angle - 180deg, transparent $size, $bg 0);
+	border-radius: .5em;
+
+	$x: $size / sin($angle);
+	$y: $size / cos($angle);
+
+	&::before {
+			content: '';
+			position: absolute;
+			top: 0;right: 0;
+			background: linear-gradient(to left bottom, 
+				transparent 50%, rgba(0, 0, 0, .2) 0, rgba(0, 0, 0, .4)) no-repeat 100% 0;
+			width: $y
+			height: $x;
+			transform:  translateY($y - $x) rotate(2*$angle - 90deg);
+			transform-origin: bottom right;
+			border-bottom-left-radius: inherit;
+			box-shadow: -.2em .2em .3em -.1em rgba(0, 0, 0, .2);
+		}
+	}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
 
   [1]: ./images/01-1.png "01-1.png"
   [2]: ./images/01-2.png "01-2.png"
@@ -316,3 +504,12 @@ main::before {
   [16]: ./images/04-5.png "04-5.png"
   [17]: ./images/04-6.png "04-6.png"
   [18]: ./images/04-7.png "04-7.png"
+  [19]: ./images/05-1.png "05-1.png"
+  [20]: ./images/05-2.png "05-2.png"
+  [21]: ./images/05-3.png "05-3.png"
+  [22]: ./images/05-4.png "05-4.png"
+  [23]: ./images/05-5.png "05-5.png"
+  [24]: ./images/05-6.png "05-6.png"
+  [25]: ./images/05-7.png "05-7.png"
+  [26]: ./images/05-8.png "05-8.png"
+  [27]: ./images/05-9.png "05-9.png"

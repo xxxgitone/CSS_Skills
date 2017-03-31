@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div {
+            margin: 3.2em;
+            width: 12em;
+
+            position: relative;
+            background: #58a;
+            background: linear-gradient(-150deg, transparent 1.414em, #58a 0);
+            border-radius: .5em;
+
+            padding: 2em;
+            color: white;
+            font: 100%/1.6 Baskerville, Palatino, serif;
+        }
+
+        div::before {
+            content: '';
+            position: absolute;
+            top: 0;right: 0;
+            background: linear-gradient(to left bottom, 
+                transparent 50%, rgba(0, 0, 0, .2) 0, rgba(0, 0, 0, .4)) no-repeat 100% 0;
+            width: 1.73em;
+            height: 3em;
+            transform:  translateY(-1.3em) rotate(-30deg);
+            transform-origin: bottom right;
+            border-bottom-left-radius: inherit;
+            box-shadow: -.2em .2em .3em -.1em rgba(0, 0, 0, .15);
+        }
+
+
+    </style>
+</head>
+<body>
+    <div>“The only way to get rid of a temptation is to yield to it.”
+— Oscar Wilde, The Picture of Dorian Gray</div>
+</body>
+</html>
