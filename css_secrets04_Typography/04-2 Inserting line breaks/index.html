@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            font: 150%/1.6 Baskerville, Palatino, serif;
+        }
+        dt, dd {
+            margin: 0;
+            display: inline;
+        }
+
+        dd {
+            font-weight: 600;
+        }
+
+        dd + dt::before {
+            content: "\A";
+            white-space: pre;
+        }
+
+        dd + dd::before {
+            content: ', ';
+            font-weight: normal;
+            margin: -.25em;
+        }
+    </style>
+</head>
+<body>
+    <dl>
+        <dt>Name:</dt>
+        <dd>Lea Verou</dd>
+
+        <dt>Email:</dt>
+        <dd>lea@verou.me</dd>
+        <dd>leaverou@mit.edu</dd>
+
+        <dt>Location:</dt>
+        <dd>Earth</dd>
+    </dl>
+</body>
+</html>

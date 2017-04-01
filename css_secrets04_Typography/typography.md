@@ -14,8 +14,117 @@ hyphens: auto;
 
 ![enter description here][2]
 
+### 2. 插入换行
+比如制作定义列表
+
+``` html
+<dl>
+	<dt>Name:</dt>
+	<dd>Lea Verou</dd>
+	
+	<dt>Email:</dt>
+	<dd>lea@verou.me</dd>
+	
+	<dt>Location:</dt>
+	<dd>Earth</dd>
+</dl>
+```
+
+```css
+dd {
+	margin: 0;
+	font-weight: bold;
+}
+```
+
+不过由于`dt`和`dd`都是块级元素，得到的结果是
+
+![enter description here][3]
+
+给他们指定`display:inline`后又是这样
+
+![enter description here][4]
+
+可以在所有关闭标签</dd>前添加`<br>`换行，但是会污染结构层代码，也不易维护。可以使用css中的换行符号，简写为‘\A’,用它来作为伪元素内容，将其添在每个dd元素后面。
+
+``` css
+dd::after {
+		content: "\A";
+	}
+```
+
+但是光这样设置并不会奏效，这段代码所做的其实只相当于在HTML代码中的所有关闭标签</dd>之前添加换行符。默认情况下，这些换行符会与相邻的其他空白符进行合并。空白符合并通常是一件好事，否则我们就得把整个HTML文档的源代码整理成一行里面，不过有时候我们希望保留源代码中的这些空白符合换行，代码块就是最好的例子。
+
+![enter description here][5]
+
+``` css
+dt, dd {
+	margin: 0;
+	display: inline;
+}
+dd {
+	margin: 0;
+	font-weight: bold;
+}
+
+dd::after {
+	content: "\A";
+	white-space: pre;
+}
+```
+用到了属性`white-space: pre;`，表示连续的空白符会被保留。在遇到换行符或者`<br>`元素时才会换行。
+
+不过并不健壮，比如加一个dd内容
+
+``` html
+<dd>lea@verou.me</dd>
+ <dd>leaverou@mit.edu</dd>
+```
+
+![enter description here][6]
+
+由于我们每个`dd`后面都加了一个换行符，所以每个值都会被分到单独一行。如果不想单独分到一行，只想针对`dt`之前最后一个`dd`插入换行，可以考虑将换行符放在`dt`前面。
+
+``` css
+dt::before {
+	content: "\A";
+	white-space: pre;
+}
+```
+
+但是会导致第一行变成空行，可以使用选择符来处理。
+
+``` css
+dd + dt::before {
+	content: "\A";
+	white-space: pre;
+}
+
+dd + dd::before {
+	content: ', ';
+	font-weight: normal;
+}
+```
+使用兄弟选择器来处理，第二个表示相邻的`dd`之间添加逗号
+
+![enter description here][7]
+
+如果你的代码在多个连续的dd之间包含了（未加注释的）空白符，那么逗号的前面会有一个空格，使用负边距修复。
+
+``` css
+dd + dd::before {
+	content: ', ';
+	font-weight: normal;
+	margin: -.25em;
+}
+```
 
 
 
   [1]: ./images/01-1.png "01-1.png"
   [2]: ./images/01-2.png "01-2.png"
+  [3]: ./images/02-1.png "02-1.png"
+  [4]: ./images/02-2.png "02-2.png"
+  [5]: ./images/02-3.png "02-3.png"
+  [6]: ./images/02-4.png "02-4.png"
+  [7]: ./images/02-5.png "02-5.png"
