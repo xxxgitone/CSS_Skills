@@ -118,6 +118,50 @@ dd + dd::before {
 	margin: -.25em;
 }
 ```
+### 3.文本行的斑马线
+> 背景知识：css渐变，background-size，条纹背景，灵活的背景定位
+
+制作表格的斑马线效果很简单，使用`:nth-child()/:nth-of-type()`即可
+
+``` css
+tr:nth-child(even) {
+	background: rgba(0, 0, 0, .2);
+}
+```
+
+但是把这种效果运用到文本的时候，使用伪元素的方式力不从心。
+
+我们可以考虑给整个文本使用背景，使用css渐变直接生成背景图像，而且可以用em单位来设置背景尺寸，这样背景就可以自动生成使用`font-size`的变化。
+
+代码文本
+
+``` html
+<pre><code>while (true) {
+        var d = new Date();
+        if (d.getDate()==1 &amp;&amp;
+            d.getMonth()==3) {
+            alert("TROLOLOL");
+        }
+    }</code></pre>
+```
+> `pre` 元素可定义预格式化的文本。被包围在 pre 元素中的文本通常会保留空格和换行符。而文本也会呈现为等宽字体。
+
+运用条纹背景知识创建出水平条纹背景，`background-size`需要设置为`line-height`的两倍，因为每个背景单元需要覆盖两行代码。
+
+``` css
+pre {
+	padding: .5em;
+	line-height: 1.5;
+	background: hsl(20, 50%, 95%);
+	background-image: linear-gradient(rgba(120,0,0,.1) 50%, transparent 0);
+	background-size: auto 3em;
+	font-family: Consolas, Monaco, monospace;
+}
+```
+
+![enter description here][8]
+
+发现错位了，原因在于使用了.5em的内边距。可以使用`background-position`把条纹向底部移动`.5em`，但是不够灵活，如果决定调整内边距，还需要相应的修改背景定位值。可以使用`background-origin:content-box(之前有介绍)`来处理。
 
 
 
@@ -128,3 +172,4 @@ dd + dd::before {
   [5]: ./images/02-3.png "02-3.png"
   [6]: ./images/02-4.png "02-4.png"
   [7]: ./images/02-5.png "02-5.png"
+  [8]: ./images/03-1.png "03-1.png"
