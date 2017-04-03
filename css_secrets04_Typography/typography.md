@@ -207,7 +207,74 @@ pre {
 
 ![enter description here][11]
 
+### 5.自定义下划线
+css中给文本添加下划线的属性是`text-decoration:underline;`,但是不同的浏览器可能会显示不一样的效果
 
+一般用法是通过边框来模拟
+
+``` css
+border-bottom: 1px solid gray;
+text-decoration: none;
+```
+![enter description here][12]
+
+这样可以实现自定义，可以根据自己的需要修改颜色、线宽等，但是这些下划线跟文本之间的间隙很大，位置甚至比字形的降部还要低。
+
+``` css
+display:inline-block;
+border-bottom: 1px solid gray;
+text-decoration: none;
+line-height: .9;
+```
+添加几行代码进行修复，添加一个稍小的`line-height`。
+
+![enter description here][13]
+
+但是换行的时候会出问题，不会跟随换行
+
+最终解决方案，使用`background-image`及其相关属性，利用之前所学的控制背景知识。
+
+``` css
+background: linear-gradient(gray, gray) no-repeat;
+background-size: 100% 1px;
+background-position: 0 1em;
+```
+![enter description here][14]
+
+这里会发现，下划线会穿过某些字母（比如p和y）的降部，假如背景色是实色，就可以设置两层与背景色相同的`text-shadow`来模拟这种效果。
+
+``` css
+a {
+	background: linear-gradient(gray, gray) no-repeat;
+	background-size: 100% 1px;
+	background-position: 0 1em;
+	text-shadow: .05em 0 white, -.05em 0 white;
+}
+```
+![enter description here][15]
+
+使用此方法生成下划线的好处在于非常灵活。比如生成一条虚线
+
+``` css
+background: linear-gradient(90deg, grey 66%, transparent 0) repeat-x;
+background-size: .2em 2px;
+background-position: 0 1em;
+```
+
+![enter description here][16]
+
+波浪线
+
+``` css
+background: linear-gradient(-45deg, transparent 40%, red 0, red 60%, transparent 0) 0 1em,
+	linear-gradient(45deg, transparent 40%, red 0, red 60%, transparent 0) .1em 1em;
+background-repeat: repeat-x;
+background-size: .2em .1em;
+text-shadow: .05em 0 white, -.05em 0 white;
+```
+
+
+![enter description here][17]
 
 
   [1]: ./images/01-1.png "01-1.png"
@@ -221,3 +288,9 @@ pre {
   [9]: ./images/03-2.png "03-2.png"
   [10]: ./images/04-1.png "04-1.png"
   [11]: ./images/04-2.png "04-2.png"
+  [12]: ./images/05-1.png "05-1.png"
+  [13]: ./images/05-2.png "05-2.png"
+  [14]: ./images/05-3.png "05-3.png"
+  [15]: ./images/05-4.png "05-4.png"
+  [16]: ./images/05-5.png "05-5.png"
+  [17]: ./images/05-6.png "05-6.png"
