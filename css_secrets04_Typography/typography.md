@@ -163,6 +163,51 @@ pre {
 
 发现错位了，原因在于使用了.5em的内边距。可以使用`background-position`把条纹向底部移动`.5em`，但是不够灵活，如果决定调整内边距，还需要相应的修改背景定位值。可以使用`background-origin:content-box(之前有介绍)`来处理。
 
+``` css
+pre {
+	padding: .5em;
+	line-height: 1.5;
+	background: hsl(20, 50%, 95%);
+	background-image: linear-gradient(rgba(120,0,0,.1) 50%, transparent 0);
+	background-size: auto 3em;
+	background-origin: content-box;
+	font-family: Consolas, Monaco, monospace;
+}
+```
+
+![enter description here][9]
+
+### 4.调整tab的宽度
+在写文档或教程的时候，我们会用`pre`和`code`元素来显示代码，默认处理样式一般是
+
+``` css
+pre {
+   padding: .5em;
+   line-height: 1.5;
+   background: hsl(20, 50%, 95%);
+   font-family: Courier New, Courier, monospace;
+}
+
+code {
+   font: inherit;
+}
+```
+
+![enter description here][10]
+
+可以看到代码的缩进非常那看，但是直接使用tab来控制的话也不是一件好事情，因为浏览器会把其宽度显示为8个字符。
+
+我们可以使用CSS3中的一个属性`tab-size(IE11和edge不支持)`属性来解决，直接设置数字值就行
+
+``` css
+pre {
+	tab-size:2;
+}
+```
+
+![enter description here][11]
+
+
 
 
   [1]: ./images/01-1.png "01-1.png"
@@ -173,3 +218,6 @@ pre {
   [6]: ./images/02-4.png "02-4.png"
   [7]: ./images/02-5.png "02-5.png"
   [8]: ./images/03-1.png "03-1.png"
+  [9]: ./images/03-2.png "03-2.png"
+  [10]: ./images/04-1.png "04-1.png"
+  [11]: ./images/04-2.png "04-2.png"
