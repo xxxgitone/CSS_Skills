@@ -277,6 +277,164 @@ text-shadow: .05em 0 white, -.05em 0 white;
 ![enter description here][17]
 
 
+### 6.现实中的文字效果
+#### 6.1 凸版印刷效果
+
+> 实现原理:出现在底部的浅色投影（或者出现在顶部的暗色投影）会让人产生物体是凹进去平面内的感觉。同理，出现在底部的暗色投影（或者出现在顶部的浅色投影）会让人产生物体从平面上凸起的错觉。
+
+当浅颜色背景上使用深色文字时，在底部加上浅色投影效果最佳。
+
+``` css
+p {
+	padding: .8em 1em;
+	background: hsl(210, 13%, 60%);
+	color: hsl(210, 13%, 30%);   /*比背景颜色深*/
+	text-shadow: 0 1px 1px hsla(0, 0%, 100%, .8);
+}
+```
+![enter description here][18]
+
+字体和背景的颜色互换后，背景颜色更深，最佳方案是在顶部使用深色投影
+
+``` css
+background: hsl(210, 13%, 30%);
+color: hsl(210, 13%, 60%);
+text-shadow: 0 -1px 1px black;
+```
+
+![enter description here][19]
+
+#### 6.2 空心字效果
+实现空心字很简单，通过`text-shadow`属性，为投影加上不同方向上的少量偏移
+
+``` css
+background: deeppink;
+color: white;
+text-shadow: 1px 1px black, -1px -1px black,
+                1px -1px black, -1px 1px black;
+```
+
+![enter description here][20]
+
+除此之外还可以重叠多层轻微模糊的投影来模拟描边，这种方法不需要设置偏移量
+
+``` css
+ text-shadow: 0 0 1px black,0 0 1px black,
+               0 0 1px black,0 0 1px black,
+               0 0 1px black,0 0 1px black;
+```
+
+![enter description here][21]
+
+但是如果需要的描边越粗，效果越差，下面是一个偏移量为3px的效果。
+
+![enter description here][22]
+
+使用SVG效果最佳
+
+``` html
+<h1><svg width="2em" height="1.2em">
+	<use xlink:href="#css"></use>
+	<text id="css" y="1em">CSS</text>
+</svg></h1>
+```
+
+样式
+``` css
+h1 text { fill: currentColor; }
+
+h1 svg { overflow: visible;}
+
+h1 use {
+	stroke: black; 
+	stroke-width: 6;
+	stroke-linejoin: round;
+}
+```
+
+![enter description here][23]
+
+#### 6.3文字外发光效果
+实现很简单，通过`text-shadow`属性，重叠几次即可，不需要考虑偏移量，颜色跟文本一致
+
+``` css
+a {
+	text-decoration: none;
+	color: #ffc;
+	text-shadow: 0 0 .1em, 0 0 .3em;
+}
+```
+
+![enter description here][24]
+
+可以为鼠标悬停添加效果
+
+``` css
+ a {
+	text-decoration: none;
+	color: #ffc;
+	transition: 1s;
+}
+
+a:hover {
+	text-shadow: 0 0 .1em, 0 0 .3em;
+}
+```
+
+还可以同时让字体变透明，更加炫酷
+
+``` css
+a:hover {
+	color: transparent;
+	text-shadow: 0 0 .1em white, 0 0 .3em white;
+}
+```
+
+#### 6.4 文字凸起效果
+一种常用思路是：使用`text-shadow`属性，设置一连串累加投影，不设置模糊并以1px的跨度逐渐错开，使颜色逐渐变暗，然后再底部加一层强烈模糊的暗投影，从而模拟完整的立体效果。
+
+``` css
+ background: #58a;
+color: white;
+text-shadow: 0 1px hsl(0, 0%, 85%),
+	0 2px hsl(0, 0%, 80%),
+	0 3px hsl(0, 0%, 75%),
+	0 4px hsl(0, 0%, 70%),
+	0 5px hsl(0, 0%, 65%),
+	0 5px 10px black;
+```
+
+使用预处理器来使代码简化
+
+``` scss
+ @mixin text-3d($color:white, $depth:5) {
+		$shadows: ();
+		$shadow-color: $color;
+
+		@for $i from 1 through $depth {
+			$shadow-color: darken($shadow-color, 10%);
+			$shadows:append($shadows, 0 ($i * 1px) $shadow-color, comma);
+		}
+
+		color:$color;
+		text-shadow: append($shadows, 0 (depth* 1px) 10px black, comma)
+	}
+```
+
+这种效果可以多变，比如把所有的投影设为黑色，并且去掉最底层的投影。
+
+``` css
+text-shadow: 1px 1px black, 2px 2px black,
+                3px 3px black,4px 4px black,
+                5px 5px black,6px 6px black,
+                7px 7px black,8px 8px black;
+```
+
+![enter description here][25]
+
+
+
+
   [1]: ./images/01-1.png "01-1.png"
   [2]: ./images/01-2.png "01-2.png"
   [3]: ./images/02-1.png "02-1.png"
@@ -294,3 +452,11 @@ text-shadow: .05em 0 white, -.05em 0 white;
   [15]: ./images/05-4.png "05-4.png"
   [16]: ./images/05-5.png "05-5.png"
   [17]: ./images/05-6.png "05-6.png"
+  [18]: ./images/06-1.png "06-1.png"
+  [19]: ./images/06-2.png "06-2.png"
+  [20]: ./images/06-3.png "06-3.png"
+  [21]: ./images/06-4.png "06-4.png"
+  [22]: ./images/06-5.png "06-5.png"
+  [23]: ./images/06-6.png "06-6.png"
+  [24]: ./images/06-7.png "06-7.png"
+  [25]: ./images/06-9.png "06-9.png"
