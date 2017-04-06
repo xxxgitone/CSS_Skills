@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        button {
+            position: relative;
+            margin: 3.2em;
+            padding: .3em .5em;
+            background: #58a;
+            color: white;
+	        font: bold 150%/1 sans-serif;
+            cursor: pointer;
+            border-radius: 50%;
+            
+            /*border方法*/
+            /*border: 10px solid transparent;
+            background-clip: padding-box;
+
+            box-shadow: 0 0 0 1px  rgba(0, 0, 0, .3) inset;*/
+
+            /*伪元素*/
+            border: 1px solid rgba(0, 0, 0, .3);
+            box-shadow:  0 .1em .2em -.05em rgba(0,0,0,.5);
+
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -10px;right: -10px;
+            bottom: -10px;left: -10px;
+        }
+    </style>
+</head>
+<body>
+    <button>+</button>
+</body>
+</html>
