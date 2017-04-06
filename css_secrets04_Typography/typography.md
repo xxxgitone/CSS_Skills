@@ -432,7 +432,46 @@ text-shadow: 1px 1px black, 2px 2px black,
 
 ![enter description here][25]
 
+### 7. 环形文字
+借助内联SVG来解决这个难题。
 
+>  让文本按照路径排列的基本方法就是用一个`<textPath>`元素来包裹住这段文本，再把它们装进一个`<text>`元素中。这个`<textPath>`元素还需要在他的ID属性中引用一个`<path>`元素，然后就可以用这个`<path>`元素来定义我们想要的路径。
+
+```html
+<div class="circular">
+      <svg viewBox="0 0 100 100">
+          <path d="M 0,50 a 50,50 0 1,1 0,1 z" id="circular"></path>
+          <text><textPath xlink:href="#circular">
+            circular reasoning works because      
+          </textPath></text>
+      </svg>
+  </div>
+```
+
+样式
+
+``` css
+.circular path {fill: none;}
+
+.circular {
+	width: 30em;
+	height: 30em;
+	margin: 3em auto;
+}
+
+.circular svg {
+	display: block;
+	overflow: visible;
+	transition: 10s linear transform;
+}
+
+.circular svg:hover {
+	transform: rotate(-2turn);
+}
+
+.circular text { fill: currentColor }
+```
+![enter description here][26]
 
 
   [1]: ./images/01-1.png "01-1.png"
@@ -460,3 +499,4 @@ text-shadow: 1px 1px black, 2px 2px black,
   [23]: ./images/06-6.png "06-6.png"
   [24]: ./images/06-7.png "06-7.png"
   [25]: ./images/06-9.png "06-9.png"
+  [26]: ./images/07-1.png "07-1.png"
