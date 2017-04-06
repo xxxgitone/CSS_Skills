@@ -8,7 +8,10 @@
 
 [3.视觉效果][3]
 
+[4.文字处理][4]
+
 
   [1]: https://github.com/xxxgitone/CSS_Skills/blob/master/css_secrets01_bg&border/bg&border.md
   [2]: https://github.com/xxxgitone/CSS_Skills/blob/master/css_secrets02_shape/shape.md
   [3]: https://github.com/xxxgitone/CSS_Skills/blob/master/css_secrets03_Visual%20Effects/visual-effects.md
+  [4]: https://github.com/xxxgitone/CSS_Skills/blob/master/css_secrets04_Typography/typography.md

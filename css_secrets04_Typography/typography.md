@@ -404,6 +404,8 @@ text-shadow: 0 1px hsl(0, 0%, 85%),
 	0 5px 10px black;
 ```
 
+![enter description here][25]
+
 使用预处理器来使代码简化
 
 ``` scss
@@ -430,7 +432,7 @@ text-shadow: 1px 1px black, 2px 2px black,
                 7px 7px black,8px 8px black;
 ```
 
-![enter description here][25]
+![enter description here][26]
 
 ### 7. 环形文字
 借助内联SVG来解决这个难题。
@@ -471,7 +473,7 @@ text-shadow: 1px 1px black, 2px 2px black,
 
 .circular text { fill: currentColor }
 ```
-![enter description here][26]
+![enter description here][27]
 
 
   [1]: ./images/01-1.png "01-1.png"
@@ -498,5 +500,6 @@ text-shadow: 1px 1px black, 2px 2px black,
   [22]: ./images/06-5.png "06-5.png"
   [23]: ./images/06-6.png "06-6.png"
   [24]: ./images/06-7.png "06-7.png"
-  [25]: ./images/06-9.png "06-9.png"
-  [26]: ./images/07-1.png "07-1.png"
+  [25]: ./images/06-8.png "06-8.png"
+  [26]: ./images/06-9.png "06-9.png"
+  [27]: ./images/07-1.png "07-1.png"
