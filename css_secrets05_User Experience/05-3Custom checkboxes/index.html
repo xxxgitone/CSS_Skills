@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            font: 150%/1.6 sans-serif;
+        }
+        input[type="checkbox"] + label::before {
+            content: '\a0'; /*不换行符*/
+            display: inline-block;
+            vertical-align: .1em;
+            width: .8em;
+            height: .8em;
+            margin-right: .2em;
+            border-radius: .2em;
+            background: silver;
+            text-indent: .15em;
+            line-height: .65;
+        } 
+
+        input[type="checkbox"]:checked + label::before {
+            content: '\2713';
+            background: yellowgreen;
+        }
+
+        input[type="checkbox"] {
+            /*display: none;*/
+            position: absolute;
+	clip: rect(0,0,0,0);
+        }
+
+        input[type="checkbox"]:focus + label::before {
+            box-shadow: 0 0 .1em .1em #58a;
+        }
+
+        input[type="checkbox"]:disabled + label::before {
+            background: gray;
+            box-shadow: none;
+            color: #555;
+        }
+
+
+    </style>
+</head>
+<body>
+    <input type="checkbox" id="awesome" autofocus />
+    <label for="awesome">Awesome!</label>
+    <br />
+
+    <input type="checkbox" id="awesome2" checked />
+    <label for="awesome2">Awesome!</label>
+    <br />
+
+    <input type="checkbox" id="awesome3" disabled />
+    <label for="awesome3">Awesome!</label>
+    <br />
+
+    <input type="checkbox" id="awesome4" checked disabled />
+    <label for="awesome4">Awesome!</label>
+</body>
+</html>
