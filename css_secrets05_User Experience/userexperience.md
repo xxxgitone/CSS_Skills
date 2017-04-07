@@ -102,7 +102,6 @@ input[type="checkbox"]:disabled + label::before {
 ### 4.通过阴影来弱化背景
 也就是制作遮罩层，传统做法是新增一个HTML元素，作遮罩元素。
 
-#### 4.1使用伪元素
 在body上添加一个伪类
 
 ``` css
@@ -116,7 +115,48 @@ body.dimmed::before {
 }
 ```
 
-在`body`上再增加一个类，防止其他需求已经占用了body元素的`::before`伪类
+在`body`上再增加一个类，防止其他需求已经占用了body元素的`::before`伪类，在`body`上添加伪类，而不直接在那个元素自己身上使用伪类的好处在于，伪元素无法绑定独立的javascript事件处理函数，绑定在body上，便于交互。
+
+### 5.通过模糊来弱化背景
+使用`filter`属性，这里需要考虑在那个元素上使用`filter`，在body上使用的话，整个页面都会被模糊处理，包括我们想要显示的元素，所以需要新增一个HTML元素用于包裹需要模糊处理的元素
+
+```html
+<dialog>O HAI, I’m a dialog. Click on me to dismiss.</dialog>
+<main>
+	<button>Show dialog</button>
+	<!--其他内容-->
+</main>
+```
+
+
+``` css
+main {
+  transition: .6s;
+}
+
+main.de-emphasized {
+	filter: blur(3px);
+}
+
+dialog {
+  position: fixed;
+  top: 50%;left: 50%;
+  z-index: 1;
+  width: 10em;
+  padding: 2em;
+  margin: -5em;
+  border: 1px solid silver;
+  border-radius: .5em;
+  box-shadow: 0 .2em .5em rgba(0, 0, 0, .5),
+	0 0 0 100vmax rgba(0,0,0,.2);  /*第二层阴影是设置模糊背景与blur共存效果更佳*/
+}
+```
+
+
+
+
+
+
 
 
   [1]: ./images/01-1.png "01-1.png"
