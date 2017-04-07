@@ -152,8 +152,67 @@ dialog {
 }
 ```
 
+### 6. 滚动提示
+当容器还有更多内容时，一层淡淡的阴影会出现在容器的顶部和/或底部。
 
+``` css
+ul {
+	display: inline-block;
+	overflow: auto;
+	width: 7.2em;
+	height: 7em;
+	border: 1px solid silver;
+	padding: .3em .5em;
+	list-style: none;
+	margin-top: 2em;
+	font: 100 200%/1.6 'Frutiger LT Std', sans-serif;
+	margin-top: 30px;
 
+	background: radial-gradient(at top, rgba(0, 0, 0, .2), transparent 70%) no-repeat;
+	background-size: 100% 15px;
+}
+```
+在顶部设置了径向渐变，用于生成阴影
+
+![enter description here][6]
+
+但是这条阴影会一直停留在顶部，哪怕顶部没有更多东西了。
+
+使用`background-attachment`来解决
+
+该属性决定背景是在视口中固定的还是随包含它的区块滚动的
+
+* fixed
+此关键字表示背景相对于视口固定。即使一个元素拥有滚动机制，背景也不会随着元素的内容滚动。
+
+* local
+此关键字表示背景相对于元素的内容固定。如果一个元素拥有滚动机制，背景将会随着元素的内容滚动， 并且背景的绘制区域和定位区域是相对于可滚动的区域而不是包含他们的边框。
+
+* scroll
+此关键字表示背景相对于元素本身固定， 而不是随着它的内容滚动（对元素边框是有效的）
+
+同时我们得设置两层背景：一层用来生成那条阴影，另一层用于遮盖阴影。生成阴影的背景层将具有默认的`scroll`值，因为希望它保持在原位，遮罩层设置为`local`，这样滚动到最顶部的时候就会盖住阴影，向下滚动的时候会跟着滚动，从而露出阴影。
+
+``` css
+background: linear-gradient(white, white),
+	radial-gradient(at top, rgba(0, 0, 0, .2), transparent 70%);
+background-repeat: no-repeat;
+background-size: 100% 15px;
+background-attachment: local, scroll;
+```
+
+![enter description here][7]
+
+增加下部阴影
+
+``` css
+background: linear-gradient(white 15px, hsla(0,0%,100%,0)) 0 0 / 100% 50px,
+	radial-gradient(at top, rgba(0,0,0,.2), transparent 70%) 0 0 / 100% 15px,
+	linear-gradient(to top, white 15px, hsla(0,0%,100%,0)) bottom / 100% 50px,
+	radial-gradient(at bottom, rgba(0,0,0,.2), transparent 70%) bottom / 100% 15px;
+background-repeat: no-repeat;
+background-attachment: local, scroll, local, scroll;
+```
 
 
 
@@ -164,3 +223,5 @@ dialog {
   [3]: ./images/02-2.png "02-2.png"
   [4]: ./images/03-1.png "03-1.png"
   [5]: ./images/03-2.png "03-2.png"
+  [6]: ./images/06-1.png "06-1.png"
+  [7]: ./images/06-2.png "06-2.png"
