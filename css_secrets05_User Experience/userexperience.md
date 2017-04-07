@@ -99,8 +99,24 @@ input[type="checkbox"]:disabled + label::before {
 
 还可以添加过渡和动画让状态呢切换平滑，还可以制作拟物化的开关。
 
+### 4.通过阴影来弱化背景
+也就是制作遮罩层，传统做法是新增一个HTML元素，作遮罩元素。
 
+#### 4.1使用伪元素
+在body上添加一个伪类
 
+``` css
+body.dimmed::before {
+	content: '';
+	position: fixed;
+	top: 0;right: 0;
+	bottom: 0;left: 0;
+	z-index: -1;
+	background: rgba(0, 0, 0, .8);
+}
+```
+
+在`body`上再增加一个类，防止其他需求已经占用了body元素的`::before`伪类
 
 
   [1]: ./images/01-1.png "01-1.png"
