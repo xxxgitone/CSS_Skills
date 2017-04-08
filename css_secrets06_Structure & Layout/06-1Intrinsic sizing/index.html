@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>自适应内部元素</title>
+    <style>
+        /*这个技巧可以让figure的宽度自适应图片的宽度*/
+
+        figure {
+            max-width: 700px; /*用于回退*/
+
+            /*宽度以最小的内容*/
+            max-width: min-content;
+            margin: auto;
+        }
+
+        figure > img {
+            max-width: inherit;
+        }
+        
+        figure {
+            padding: 10px;
+            border: 1px solid silver;
+        }
+    </style>
+</head>
+<body>
+   <p>Let’s assume we have some text here. Bacon ipsum dolor sit amet turkey veniam shankle, culpa short ribs kevin t-bone occaecat.</p>
+    <figure>
+        <img src="dog.jpg" />
+        <figcaption>
+            The great Sir Adam Catlace was named after Countess Ada Lovelace, the first programmer ever.
+        </figcaption>
+    </figure>
+    <p>We also have some more text here. Et laborum venison nostrud, ut veniam sint kielbasa ullamco pancetta.</p> 
+</body>
+</html>
