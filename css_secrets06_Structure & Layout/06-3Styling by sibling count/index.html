@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>根据兄弟元素的数量来设置样式</title>
+    <style>
+        /*当列表项为4或者大于4，隐藏color文字*/
+        .palette li:first-child:nth-last-child(n+4) .color-options a:after,
+        .palette li:first-child:nth-last-child(n+4) ~ li .color-options a:after {
+            content: none;
+        }
+
+        /*当列表为6或者大于6时，隐藏a标签中的文字*/
+        .palette li:first-child:nth-last-child(n+6) .color-options a,
+        .palette li:first-child:nth-last-child(n+6) ~ li .color-options a {
+            color: transparent;
+            font-size: 0;
+        }
+       .palette li:only-child .delete {
+           /*只有一个li的时候，隐藏delete*/
+           display: none;
+       }
+
+       /*palette样式*/
+       .palette {
+           display: flex;
+           height: 200px;
+           max-width: 900px;
+           font: bold 90%/1 sans-serif;
+       }
+
+       .palette li {
+           flex: 1;
+           list-style: none;
+           background: #D6e055;
+       }
+
+       .color-options {
+           background: rgba(0, 0, 0, .5);
+           padding: 10px;
+           margin: 0 10px;
+           overflow: hidden;
+           border-radius: 0 0 10px 10px;
+       }
+
+       .color-options .add {
+           float: left;
+       }
+       .color-options .delete {
+           float: right;
+       }
+
+       .color-options a {
+            color: white;
+            text-decoration:none;
+        }
+
+       .color-options a:before {
+           display:inline-block;
+            font-size: 1rem;
+            width:1.3rem;
+            margin-right:.3rem;
+            text-align: center;
+            line-height: 1.3;
+            background:white;
+            border-radius: 50%;
+            letter-spacing: normal;
+       }
+
+       .color-options .add:before {
+            content:'✚';
+            color:#590;
+        }
+        
+        .color-options .delete:before {
+            content:'✖';
+            color:#b00;
+        }
+
+        .color-options a:after {
+            content: ' color';
+            font-weight: normal;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+    <ul class="palette">
+        <li>
+            <div class="color-options">
+                <a class="add" href="#">Add</a>
+                <a class="delete" href="#">Delete</a>
+            </div>
+        </li>
+    </ul>
+
+    <script>
+        const colors = [
+            '#D6E055', // Agave
+            '#082323', '#E6E2AF', '#A7A37E', '#EFECCA', '#046380', // Sandy stone beach
+            '#1C171D', '#FEE169', '#CDD452', '#F9722E', '#C9313D', // Sushi Maki
+            '#2E95A3', '#50B8B4', '#C6FFFA', '#E2FFA8'  // Agave
+        ];
+        const palette = document.querySelector('.palette');
+        const template = palette.firstElementChild;
+
+        function addColor(template) {
+            const li = template.cloneNode(true);
+            //pop()方法从数组中删除最后一个元素，并返回该元素的值。此方法更改数组的长度
+            const color = colors.pop();
+
+            //unshift() 方法将一个或多个元素添加到数组的开头，并返回新数组的长度
+            colors.unshift(color);
+
+            li.style.background = color;
+            palette.insertBefore(li, template.nextSibling);
+        }
+
+        palette.onclick = function(evt){
+            const button = evt.target;
+
+            if(button.className == 'add') {
+                addColor(button.parentNode.parentNode);
+            } else if (button.className == 'delete') {
+                var li = button.parentNode.parentNode;
+                li.parentNode.removeChild(li);
+            }
+        }
+
+    </script>
+</body>
+</html>
