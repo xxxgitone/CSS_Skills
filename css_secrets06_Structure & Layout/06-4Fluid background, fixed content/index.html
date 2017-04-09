@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>满幅的背景，顶宽的内容</title>
+    <style>
+      /*一半传统做法是将内容再用一层HTML标签进行包裹，给定宽度，然后margin:auto*/
+      /*该技巧可以不用添加额外的包裹标签，实现这个效果，最关键的是理解margin:auto,在传统做法上的原理*/
+      /*margin:auto这条声明所产生的左右外边距实际上都等于视口的宽度的一半减去内容宽度的一半*/
+      body {
+        margin: 0;
+        font: 100%/1.5 sans-serif;
+    }
+
+    header, section, footer {
+        /*这行代码就可以实现内容的居中，内容的宽度为900px;*/
+        padding: 1em calc(50% - 450px);
+    }
+
+        footer {
+        background: #333;
+        color: white;
+    }
+
+    header {
+        background: orange;
+        color: white;
+    }
+
+    section + section {
+        background: #eee;
+    }
+
+    </style>
+</head>
+<body>
+    <header>
+	    <h1>Fluid background, <br />fixed content</h1>
+    </header>
+    <section>
+        <h1>Heading</h1>
+        <p>Bacon ipsum dolor amet voluptate et shoulder, ipsum flank tongue exercitation commodo sed beef ribs drumstick in venison laborum. Laboris ut enim id drumstick, et aute esse. Consequat ad kielbasa anim pork loin turkey qui cupidatat drumstick doner labore. Nulla sirloin jerky do sed magna meatloaf. Ribeye ea ut elit leberkas laboris sausage corned beef drumstick cillum non.</p>
+    </section>
+    <section>
+        <h1>Another heading</h1>
+        <p>Nostrud landjaeger cillum beef cow tail cupidatat non mollit voluptate jowl. Enim sunt in, flank hamburger proident qui. Id aute excepteur chuck magna tempor ipsum pork chop t-bone. Frankfurter meatball pork loin beef et leberkas pork. Pig ball tip pancetta in.</p>
+        <p>Ribeye in veniam ipsum flank. Elit incididunt t-bone proident meatball. Porchetta exercitation prosciutto sausage chuck ut eu brisket shank pastrami turkey sunt laboris tenderloin anim. Landjaeger do venison laboris kevin.</p>
+    </section>
+    <footer>
+        <p>&copy; 2015 Lea Verou (j/k, feel free to use wherever)</p>
+        <p>Consectetur et t-bone pork loin. Tri-tip cupim in, spare ribs velit exercitation in. Tempor cillum fugiat, nisi leberkas reprehenderit anim laboris proident cow. Eu fatback kevin sint, ad shoulder in venison picanha. Sausage drumstick capicola, culpa boudin pork belly minim aute ipsum biltong picanha venison nulla adipisicing.</p>
+    </footer>
+</body>
+</html>
