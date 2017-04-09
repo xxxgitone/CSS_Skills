@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>垂直居中</title>
+    <style>
+        h1 {
+            margin: 0 0 .2em;
+            font-size: 150%;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        body {
+            background: #fb3;
+            font: 100%/1.5 sans-serif;
+        }
+
+        main {
+            padding: 1em 1.5em;
+            box-sizing: border-box;
+            background: #655;
+            color: white;
+            text-align: center;
+        }
+
+        /*对元素的水平居中很简单：如果是行内元素，就对他的父元素使用text-align:center
+                            如果是块级元素，就对他的父元素使用margin:auto*/
+
+        /*垂直居中更加复杂，比较好的几种*/
+
+        /*1.基于绝对定位的结局方案*/
+        /*早期的垂直居中，它要求具有固定的宽度和高度*/
+
+        /*main {
+            position: absolute;
+            top: 50%;left: 50%; 
+            margin-top: -3em;
+            margin-left: -9em;
+            width:18em;height: 6em;
+        }*/
+
+        /*或者*/
+        /*main {
+            position: absolute;
+            top: calc(50% - 3em);
+            left: calc(50% - 9em); 
+            width:18em;height: 6em;
+        }*/
+
+        /*最终方案*/
+        /*main {
+            position: absolute;
+            top: 50%;left: 50%;
+            transform: translate(-50%, -50%);
+        }*/
+
+        /*2.基于视口单位的解决方案*/
+        /*在不想使用绝对定位的情况下*/
+
+        /*main {
+            width: 18em;
+            padding: 1em 1.5em;
+            margin: 50vh auto 0;
+            transform: translateY(-50%);
+        }*/
+
+        /*3.基于flexbox的解决方案，最佳方案，flex布局也是未来趋势*/
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0; /*清除自身默认margin*/
+        }
+
+        main {
+            /*在flexbox布局中，margin:auto,不仅在水平方向将元素居中，垂直方向也如此*/
+            margin: auto;
+        }
+
+        /*flexbox布局还有一个好处就是，还可以将没有被标签包裹的文本节点垂直居中*/
+
+        main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 18em;
+            height: 10em;
+        }
+        
+
+    </style>
+</head>
+<body>
+  <!--<main>
+      <h1>Am I center yet?</h1>
+      <p>Center me, please!</p>
+  </main>-->
+
+  <main>Center me please!</main>
+</body>
+</html>
