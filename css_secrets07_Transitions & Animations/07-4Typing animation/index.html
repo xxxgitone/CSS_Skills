@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>打字动画</title>
+    <style>
+        @keyframes typing {
+            from { width: 0; }
+        }
+
+        /*模拟光标闪烁*/
+        @keyframes caret {
+            50% { border-color: transparent; }
+        }
+       h1 {
+            font: bold 200% Consolas, Monaco, monospace;
+
+            /*ch 表示“0”字形宽度，在等宽字体中，“0”字形的宽度和其他字形的宽度是一样的*/
+            /*width: 15ch;*/
+            /*animation: typing 6s steps(15),
+                caret 1s steps(1) infinite;*/
+
+                animation: typing 6s,
+                caret 1s infinite;
+            /*阻止换行*/
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: .05em solid;
+       }
+    </style>
+</head>
+<body>
+    <h1>CSS is awesome!</h1>
+
+    <script>
+        const h1 = document.querySelector('h1');
+        const len = h1.textContent.length;
+        const s = h1.style;
+
+        s.width = len + 'ch';
+        s.animationTimingFunction = "steps(" + len + "), steps(1)";
+    </script>
+</body>
+</html>
