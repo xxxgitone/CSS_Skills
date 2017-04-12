@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>逐帧动画</title>
+    <style>
+        @keyframes loader {
+            to { background-position: -800px 0; }
+        }
+       .loader {
+           width: 100px;
+           height: 100px;
+           background: url(http://dabblet.com/img/loader.png) 0 0;
+
+           animation: loader 1s infinite steps(8);
+
+           /*隐藏文本*/
+           text-indent: 200%;
+           white-space: nowrap;
+           overflow: hidden;
+       }
+    </style>
+</head>
+<body>
+    <div class="loader">Loading…</div>
+</body>
+</html>
