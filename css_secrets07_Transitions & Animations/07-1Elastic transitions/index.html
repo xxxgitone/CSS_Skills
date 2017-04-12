@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>缓动效果</title>
+    <style>
+       /*弹跳动画*/
+       @keyframes bounce {
+           60%, 80%, to { 
+               transform: translateY(400px);
+               animation-timing-function: ease;
+           }
+           70% { transform: translateY(300px); }
+           90% { transform: translateY(360px); }
+       }
+
+        .ball {
+            width: 0;
+            height: 0;
+            padding: 1.5em;
+            border-radius: 50%;
+            margin: auto;
+            background: red radial-gradient(at 30% 30%, #fdd, red);
+
+            /*animation-fill-mode :forwards目标保持动画最后一帧的样式*/
+            animation: bounce 2s cubic-bezier(.1, .25, 1, .25) forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="ball"></div>
+</body>
+</html>
